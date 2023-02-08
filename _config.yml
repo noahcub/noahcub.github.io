@@ -19,9 +19,9 @@ timezone:
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Chirpy                          # the main title
+title: Las notas de Noah                          # the main title
 
-tagline: A text-focused Jekyll theme   # it will display as the sub-title
+tagline: Notas sobre Linux y software libre   # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
   A minimal, responsive, and powerful Jekyll theme for presenting professional writing.
@@ -30,7 +30,7 @@ description: >-                        # used by seo meta and the atom feed
 url: ''
 
 github:
-  username: github_username             # change to your github username
+  username: noahcub             # change to your github username
 
 twitter:
   username: twitter_username            # change to your twitter username
@@ -78,7 +78,7 @@ theme_mode:   # [light|dark]
 # will be added to all image (site avatar & posts' images) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
-img_cdn:
+img_cdn: assets/img/avatar.jpg
 
 # the avatar on sidebar, support local or CORS resources
 avatar:
