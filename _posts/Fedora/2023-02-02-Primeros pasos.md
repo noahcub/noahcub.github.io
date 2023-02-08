@@ -55,7 +55,7 @@ Habilitamos Maximizar y Minimizar en las ventanas:
 ![Foto.png](add-minimize-button-to-windows.png)
 
 Habilitar/deshabilitar los informes de errores:
-![Foto.png](utomatic-problem-reporting-feature.png)
+![Foto.png](automatic-problem-reporting-feature.png)
 
 Configuraciones de energía:
 ![Foto.png](power-settings.png)
