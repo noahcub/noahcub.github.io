@@ -63,5 +63,5 @@ En la configuración hay que deshabilitar la aceleración por hardware:
 
 ***   
 Fuentes:  
-[https://yourgeekweb.com/es/2022/06/18/como-instalar-los-drivers-de-nvidia-en-linux-fedora/](https://yourgeekweb.com/es/2022/06/18/como-instalar-los-drivers-de-nvidia-en-linux-fedora/)  
+
 
