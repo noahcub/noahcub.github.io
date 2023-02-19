@@ -3,7 +3,7 @@ title: Buscar y eliminar archivos
 date: 2023-02-06 08:00:00 +0100
 categories: [System]
 tags: [software, system, tips]     # TAG names should always be lowercase
-img_path: /pictures/
+img_path: /assets/pictures/
 author: <noah>
 ---
 ## Qué es y cómo funciona el comando Screen en Linux
