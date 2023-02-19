@@ -1,12 +1,11 @@
 ---
-title: Problemas renderizado gpu Nvidia
-date: 2023-02-19 18:00:00 +0100
+title: Problemas renderizado GPU Nvidia
+date: 2023-02-19 08:00:00 +0100
 categories: [System]
-tags: [software, config]     # TAG names should always be lowercase
+tags: [software, system, tips]     # TAG names should always be lowercase
 img_path: /assets/pictures/
 author: <noah>
 ---
-
 ## Problemas al ejecutar algunos programas con renderizado gpu
 
 Algunos programas generan errores de visualización debido al renderizado de GPU con drivers Nvidia. En la mayoría lo podemos deshabilitar:
