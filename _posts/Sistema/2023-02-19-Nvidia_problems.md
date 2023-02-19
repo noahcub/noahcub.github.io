@@ -1,6 +1,6 @@
 ---
 title: Problemas renderizado gpu Nvidia
-date: 2023-02-02 18:00:00 +0100
+date: 2023-02-19 18:00:00 +0100
 categories: [System]
 tags: [software, config]     # TAG names should always be lowercase
 img_path: /assets/pictures/
