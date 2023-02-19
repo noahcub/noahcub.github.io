@@ -3,7 +3,7 @@ title: Web estática con Jekyll y Bundle
 date: 2023-02-02 18:00:00 +0100
 categories: [Software, Fedora]
 tags: [software, programming]     # TAG names should always be lowercase
-img_path: /assets/pictures/
+img_path: /pictures/
 author: <noah>
 ---
 ## Configuración sistema para ejecutar web estática en local antes de subir a github
