@@ -1,7 +1,7 @@
 ---
 title: Accesos director a Office Online
-date: 2023-02-19 10:00:00 +0100
-categories: [Apps]
+date: 2023-02-19 18:00:00 +0100
+categories: [Applications]
 tags: [software, tips]     # TAG names should always be lowercase
 img_path: /assets/pictures/
 author: <noah>
