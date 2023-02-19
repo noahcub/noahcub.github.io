@@ -51,9 +51,9 @@ Modificar el fichero
 ~/.config/Microsoft/Microsoft Teams/desktop-config.json  
 Cambiamos  
 ```bash 
-"disableGpu":false
+"disableGpu":false (por defecto la opción es FALSE)
 por 
-"disableGpu":false
+"disableGpu":true
 ```
   
 **THUNDERBIRD**  
