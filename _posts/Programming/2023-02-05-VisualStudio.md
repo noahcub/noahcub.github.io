@@ -1,7 +1,7 @@
 ---
 title: Deshabilitar renderizado GPU en Visual Studio Code y Microsoft Teams
 date: 2023-02-05 08:00:00 +0100
-categories: [Software]
+categories: [Programming]
 tags: [software, programming]     # TAG names should always be lowercase
 img_path: /pictures/
 author: <noah>

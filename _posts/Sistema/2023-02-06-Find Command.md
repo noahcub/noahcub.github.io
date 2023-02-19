@@ -1,7 +1,7 @@
 ---
 title: Buscar y eliminar archivos
 date: 2023-02-06 08:00:00 +0100
-categories: [Software]
+categories: [System]
 tags: [software, system, tips]     # TAG names should always be lowercase
 img_path: /pictures/
 author: <noah>
