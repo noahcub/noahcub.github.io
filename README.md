@@ -11,5 +11,5 @@ This work is published under [MIT][mit] License.
 
 [chirpy]: https://github.com/cotes2020/jekyll-theme-chirpy/
 [jekyll]: https://jekyllrb.com/
-[mit]: https://github.com/cotes2020/jekyll-theme-chirpy/blob/master/LICENSE
+[mit]: https://github.com/noahcub/noahcub.github.io/blob/main/LICENSE
 
