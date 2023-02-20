@@ -1,8 +1,8 @@
 ---
 title: Configuración de FirewallD
 date: 2023-02-02 17:00:00 +0100
-categories: [Software, Fedora]
-tags: [software, network]     # TAG names should always be lowercase
+categories: [System]
+tags: [software, network, fedora]     # TAG names should always be lowercase
 img_path: /assets/pictures/
 author: <noah>
 ---
