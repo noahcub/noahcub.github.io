@@ -184,22 +184,22 @@ $CONFIG = array (
   'trusted_domains' => 
   array (
     0 => '192.168.1.xxxx:8666',
-    1 => 'nextcloud.xxxxxxxxxxxxxxxxxxxxxxxxxx.duckdns.org'
+    1 => 'nextcloud.xxxxxxxxxxxxxxxxxxxxxxxxxx.duckdns.org',
   ),
   'datadirectory' => '/var/www/html/data',
   'dbtype' => 'mysql',
   'version' => '25.0.4.1',
   'trusted_proxies' => ['swag'],
-  'overwrite.cli.url' => 'https://nextcloud.xxxxxxxxxxxxxxxxxxxxxxx.duckdns.org/',
-  'overwritehost' => 'nextcloud.xxxxxxxxxxxxxxxxxxxxxxxx.duckdns.org',
+  'overwrite.cli.url' => 'https://nextcloud.xxxxxxxxxxxxxxxxxx.duckdns.org/',
+  'overwritehost' => 'nextcloud.xxxxxxxxxxxxxxxxxxxxxxxxx.duckdns.org',
   'overwriteprotocol' => 'https',
   'dbname' => 'nextcloud',
-  'dbhost' => '192.168.1.xxx:3306',
+  'dbhost' => '192.168.1.xxxx:3306',
   'dbport' => '',
   'dbtableprefix' => 'oc_',
   'mysql.utf8mb4' => true,
-  'dbuser' => 'xxxxxxxxxxxxxxxxxxxxxxx',
-  'dbpassword' => 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+  'dbuser' => 'nextcloud_user',
+  'dbpassword' => 'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
   'installed' => true,
 );
 ```
@@ -211,7 +211,6 @@ Al instalar el contenedor de nextcloud dice que el proxy inverso debe comunicars
 Para que funcione he dejado el fichero de configuración de swag nextcloud.subdomain.conf de la siguiente forma:  
 
 ``` bash
-
 server {
     listen 443 ssl;
     listen [::]:443 ssl;
@@ -234,12 +233,17 @@ server {
         proxy_max_temp_file_size 2048m;
     }
 }
+
 ```
 
 Reiniciamos los dos contenedores:
 
 ``` bash
-docker restart nextcloud
 docker restart swag
+docker restart nextcloud
 ```
 Y probamos el acceso, esta vez desde el dominio personalizado:
+
+![config-2](config-2.png)
+
+Ya debería funcionar.
