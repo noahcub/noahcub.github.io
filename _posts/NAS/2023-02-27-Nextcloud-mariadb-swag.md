@@ -246,4 +246,64 @@ Y probamos el acceso, esta vez desde el dominio personalizado:
 
 ![config-2](config-2.png)
 
-Ya debería funcionar.
+Ya debería funcionar.  
+ 
+Accedemos como administrador y en el apartado Security & setup warnings vemos varios errores que tenemos que corregir para hacer más seguro nuestro nextcloud:
+
+![postconfig-1](postconfig-1.png)
+
+El primer error lo solucionamos descomentando la siguiente línea en el fichero ssl.conf de nginx:
+
+``` bash
+cd /mnt/user/appdata/swag/nginx
+nano ssl.conf 
+```
+
+``` bash
+#add_header Referrer-Policy "same-origin" always;
+#add_header X-Content-Type-Options "nosniff" always;
+add_header X-Frame-Options "SAMEORIGIN" always;
+#add_header X-UA-Compatible "IE=Edge" always;
+#add_header X-XSS-Protection "1; mode=block" always;
+```
+
+El segundo error se corrige descomentando la siguiente línea del mismo fichero ssl.conf:
+
+``` bash
+# HSTS (ngx_http_headers_module is required) (63072000 seconds)
+add_header Strict-Transport-Security "max-age=63072000" always;
+# OCSP stapling
+```
+El error del correo electrónico se soluciona configurando un correo que permita enviar correos para notificaciones:  
+
+![postconfig-2](postconfig-2.png)
+
+Para el último error de la región del teléfono se soluciona si añadimos el siguiente texto al fichero config.php de nextcloud:
+
+``` bash
+  'installed' => true,
+  'default_phone_region' => 'ES'
+```
+
+Reiniciamos los dos contenedores:
+``` bash
+docker restart swag
+swag
+docker restart nextcloud
+nextcloud
+``` 
+Verificamos que todo está correcto:
+
+![postconfig-3](postconfig-3.png)
+
+Realizamos el escaneo de seguridad externo de nextcloud:
+
+![postconfig-4](postconfig-4.png)
+
+Y vemos el resultado final:
+
+![postconfig-5](postconfig-5.png)
+
+Por útlimo habría que crear los usuarios e instalar las aplicaciones más interesantes. Es importante habilitar 2FA en los usuarios. Para ellos activamos la siguiente aplicación:
+
+![totp](totp.png)
