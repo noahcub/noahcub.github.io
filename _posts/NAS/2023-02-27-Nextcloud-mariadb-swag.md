@@ -307,3 +307,28 @@ Y vemos el resultado final:
 Por útlimo habría que crear los usuarios e instalar las aplicaciones más interesantes. Es importante habilitar 2FA en los usuarios. Para ellos activamos la siguiente aplicación:
 
 ![totp](totp.png)
+
+a debería funcionar.
+
+Durante la sincronización Nextcloud daba el siguiente error:
+
+``` bash
+network error 99 nextcloud
+```
+La sincronización iba como a golpes y no acababa de funcionar correctamente.  
+
+Buscando soluciones encontré esto por github:
+
+``` bash
+I have been hitting “Network Error 99” and the Desktop client freezing up since upgrading to NextCloud 25. I finally found a fix discussed in GitHub issue 5094 150, in summary this is what fixed it for me:
+
+    On the client, disable any upload speed limits
+    On the server, edit config.php to add the line 'bulkupload.enabled' => false,
+
+From the discussions on GitHub, it sounds like the upload speed limit and bulk upload features are buggy in the latest server/desktop releases.
+```
+Editamos el fichero config.php de nextcloud y añadimos la línea 
+``` bash
+'bulkupload.enabled' => false,
+```
+Parece que se solucionó y comenzó a funcionar correctamente la sincronización.
