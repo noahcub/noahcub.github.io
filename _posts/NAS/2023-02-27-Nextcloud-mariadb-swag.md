@@ -248,7 +248,7 @@ Y probamos el acceso, esta vez desde el dominio personalizado:
 
 Ya debería funcionar.  
  
- ## Corrección de errores de seguridad  
+ ## Corrección de errores de seguridad    
 Accedemos como administrador y en el apartado Security & setup warnings vemos varios errores que tenemos que corregir para hacer más seguro nuestro nextcloud:
 
 ![postconfig-1](postconfig-1.png)
