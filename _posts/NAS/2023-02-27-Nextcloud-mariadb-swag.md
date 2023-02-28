@@ -247,3 +247,26 @@ Y probamos el acceso, esta vez desde el dominio personalizado:
 ![config-2](config-2.png)
 
 Ya debería funcionar.
+
+Durante la sincronización Nextcloud daba el siguiente error:
+
+  'bulkupload.enabled' => false,
+
+``` bash
+network error 99 nextcloud
+```
+Buscando soluciones encontré esto por github:
+
+``` bash
+I have been hitting “Network Error 99” and the Desktop client freezing up since upgrading to NextCloud 25. I finally found a fix discussed in GitHub issue 5094 150, in summary this is what fixed it for me:
+
+    On the client, disable any upload speed limits
+    On the server, edit config.php to add the line 'bulkupload.enabled' => false,
+
+From the discussions on GitHub, it sounds like the upload speed limit and bulk upload features are buggy in the latest server/desktop releases.
+```
+Editamos el fichero config.php de nextcloud y añadimos la línea 
+``` bash
+'bulkupload.enabled' => false,
+```
+Parece que se solucionó.
