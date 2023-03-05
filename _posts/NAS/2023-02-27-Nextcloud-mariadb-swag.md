@@ -335,3 +335,68 @@ Editamos el fichero config.php de nextcloud y añadimos la línea
 'bulkupload.enabled' => false,
 ```
 Parece que se solucionó y comenzó a funcionar correctamente la sincronización.
+
+## Dashboard para swag  
+
+Vamos a intentar securizar swag en la medida de lo posible.  
+Lo primero que haremos es instalar un dashboard que nos permita ver la actividad del proxy inverso.  
+Es importante recalcar que este dashboard solo funciona con subdominios y no con subdirectorios.
+
+[SWAG Dashboard](https://github.com/linuxserver/docker-mods/tree/swag-dashboard)
+
+Siguiendo las instrucciones de instalación es muy sencillo ponerlo en marcha en nuestro contenedor swag:  
+Para ello modificamos el contenedor Swag de la siguiente manera:  
+Añadimos la variable de entorno 
+``` bash
+DOCKER_MODS=linuxserver/mods:swag-dashboard
+```
+![swagmods](swag_mods.png)
+
+Redireccionamos un puerto del unRaid al puerto 81 de nuestro contenedor swag para acceder al dashboard:
+
+![swagports](swag_ports.png)
+
+Por útlimo este es el resultado total:
+
+![swagmodsok](swag_mods_ok.png)
+
+Ya tenemos operativo el Dashboard:
+
+![Dashboard](dashboard.png)
+
+## Securizando swag
+
+### Extra security layers  
+Habilitar HSTS:  
+HTTP Strict Transport Security (HSTS) es un estándar simple y ampliamente compatible para proteger a los visitantes al garantizar que sus navegadores siempre se conecten a un sitio web a través de HTTPS.  HSTS existe para eliminar la necesidad de la práctica común e insegura de redirigir a los usuarios de URL de http:// a https://.
+
+En nuestro caso, esta opción ya quedó habilitada ya que Nextcloud nos lo detectaba como un error de seguridad. Volvemos a revisarlo:  
+
+
+``` bash
+cd /mnt/user/appdata/swag/nginx
+cat ssl.conf 
+```
+
+Debe estar descomentala la línea siguiente:
+``` bash
+# HSTS (ngx_http_headers_module is required) (63072000 seconds)
+add_header Strict-Transport-Security "max-age=63072000" always;
+# OCSP stapling
+```
+
+### Fail2ban
+Fail2ban ya viene incluido en nustro servidor swag. Es una aplicación que se encarga de bloquear los ataques de fuerza bruta a nuestro servidor.  
+
+
+
+
+***   
+Fuentes y enlaces de interés que ayudaran a complementar esta guía:  
+
+Instalación Nextcloud:  
+[https://telegra.ph/Como-configurar-SWAG-como-proxy-inverso-en-Unraid-y-cualquier-otro-NAS-usando-docker-05-09](https://telegra.ph/Como-configurar-SWAG-como-proxy-inverso-en-Unraid-y-cualquier-otro-NAS-usando-docker-05-09)  
+[https://forum.openmediavault.org/index.php?thread/28216-how-to-nextcloud-with-swag-letsencrypt-using-omv-and-docker-compose/](https://forum.openmediavault.org/index.php?thread/28216-how-to-nextcloud-with-swag-letsencrypt-using-omv-and-docker-compose/)  
+Securizar swag:  
+[https://blog.thelazyfox.xyz/setup-swag-to-safely-expose-your-self-hosted-applications-to-the-internet/](https://blog.thelazyfox.xyz/setup-swag-to-safely-expose-your-self-hosted-applications-to-the-internet/)
+[https://virtualize.link/secure/](https://virtualize.link/secure/)
