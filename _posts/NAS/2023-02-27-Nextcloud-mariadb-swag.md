@@ -386,7 +386,77 @@ add_header Strict-Transport-Security "max-age=63072000" always;
 ```
 
 ### Fail2ban
-Fail2ban ya viene incluido en nustro servidor swag. Es una aplicación que se encarga de bloquear los ataques de fuerza bruta a nuestro servidor.  
+Fail2ban ya viene incluido en nustro servidor swag. Es una aplicación que se encarga de bloquear los ataques de fuerza bruta a nuestro servidor. 
+
+Debemos localizar el fichero de logs de Nextcloud (en este caso, en otro caso sería otra aplicación):
+
+En mi caso, Nextcloud guarda los logs en el volumen Nextcloud-files que configuré al crear el docker en Unraid:
+
+``` bash
+Nextcloud-Files pwd
+/mnt/user/Nextcloud-Files
+Nextcloud-Files ls
+admin                            index.html     
+appdata_oclkxgc09392  files_external  nextcloud.log  
+
+```
+Una vez localizado procedemos a montar el fichero en modo solo lectura en el docker de swag, para que fail2ban pueda leer los intentos de conexión fallidos y proceder a su baneo:
+
+![fail2ban](fail2ban.png)
+
+Y actualizamos el contenedor swag.
+
+Creamos el  fichero nextcloud.conf dentro de la carpeta fail2ban/filter.d del contenedor swag:
+
+``` bash
+Fichero nextcloud.conf
+➜  filter.d cat nextcloud.conf  
+[Definition]
+failregex=^.*Login failed: '?.*'? \(Remote IP: '?<ADDR>'?\).*$
+          ^.*\"remoteAddr\":\"<ADDR>\".*Trusted domain error.*$
+ignoreregex =
+```
+
+Dentro de filter.d tenemos muchos ejemplos para filtros de distintos servicios.
+
+Probamos si funciona la configuración aplicada:
+
+``` bash
+docker exec swag fail2ban-regex /nextcloud/nextcloud.log /config/fail2ban/filter.d/nextcloud.local
+```
+Debería salir algo similar a esto:
+
+![fail2ban-2](fail2ban-2.png)
+
+Por último tenemos que crear la jaula en el fichero general de fail2ban situado en fail2ban/jail.local. Añadimos esto al final del fichero:
+
+``` bash
+[nextcloud]
+enabled  = true
+filter   = nextcloud
+port     = http,https
+logpath  = /nextcloud-logs/nextcloud.log
+action   =  iptables-allports[name=nextcloud]
+```
+
+Repetimos este proceso para cada uno de los servicio que expongamos a internet.
+
+Si nos conectamos a una VPN podemos realizar la prueba haciendo unos logs erroneos:  
+Como vemos en la imagen fail2ban ha bloqueado la ip de pruebas:
+![fail2ban-3](fail2ban-3.png)
+
+Si por cualquier motivo queremos des-banear una IP:
+
+``` bash
+docker exec swag fail2ban-client unban <ip address>
+```
+
+### Habilitar notificaciones DISCORD de los baneos fail2ban
+
+F2B Discord Notification - Docker mod which allows Fail2Ban Discord embeds
+
+### Geoblock
+
 
 
 
