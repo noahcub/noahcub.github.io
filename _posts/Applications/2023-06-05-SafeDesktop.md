@@ -14,7 +14,7 @@ En el centro de software de Gnome está disponible como paquete flatpak:
 
 ![savedesktop](savedesktop.png)
 
-También podemos instalar con el siguiente comando:
+También podemos instalar con el siguiente comando: 
 ``` bash
 flatpak install flathub io.github.vikdevelop.SaveDesktop
 ```
