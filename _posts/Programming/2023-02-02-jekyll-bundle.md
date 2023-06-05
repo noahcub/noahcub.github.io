@@ -14,8 +14,17 @@ Instalamos el software necesario a través de DNF:
 ``` bash
 sudo dnf install ruby rubygems ruby-devel gcc gcc-c++ rpm-build
 ```
+Le decimos al administrador de gemas donde queremos que se instalen las gemas:
+Editamos .zshrc y añadimos esto al final:
 
-Instalamos las gemas de jekyll y bundler:
+``` bash
+# Install Ruby Gems to ~/gems
+export GEM_HOME="$HOME/gems"
+export PATH="$PATH:~/bin"
+export PATH="$HOME/gems/bin:$PATH"
+
+```
+Ahora ya podemos instalar las gemas. Instalamos las gemas de jekyll y bundler:
 
 ``` bash
 gem install jekyll bundler
@@ -34,6 +43,7 @@ Se arrancará el servidor en:
 ``` bash
 localhost:4000
 ```
+
 
 Es posible que el sistema lance un error similar a este:
 ``` bash
