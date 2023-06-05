@@ -59,13 +59,21 @@ export PATH="$PATH:$GEM_HOME/bin"
 ```
 En ~/.local/share/gem/ruby se copia la carpeta ~/bin o bien se añade directamente esta última al path. 
 
+Y si queremos eliminar todas las gemas instaladas de Ruby:
+``` bash
+ for i in 'gem list --no-versions'; do gem uninstall -aIx $i; done
 
-
+```
+Para eliminar sólo una: 
+``` bash
+ gem uninstall gemaaaaaa --version 1.1.9  
+```
 ***
 Fuentes:  
 [https://docs.github.com/es/pages/setting-up-a-github-pages-site-with-jekyll/creating-a-github-pages-site-with-jekyll](https://docs.github.com/es/pages/setting-up-a-github-pages-site-with-jekyll/creating-a-github-pages-site-with-jekyll)  
 [https://docs.github.com/es/pages/setting-up-a-github-pages-site-with-jekyll/testing-your-github-pages-site-locally-with-jekyll](https://docs.github.com/es/pages/setting-up-a-github-pages-site-with-jekyll/testing-your-github-pages-site-locally-with-jekyll)  
 [https://github.com/just-the-docs/just-the-docs-template/blob/main/README.md](https://github.com/just-the-docs/just-the-docs-template/blob/main/README.md)  
+[http://brionescl.blogspot.com/2014/02/eliminar-todas-las-gemas-de-ruby.html](http://brionescl.blogspot.com/2014/02/eliminar-todas-las-gemas-de-ruby.html)  
 
 
 
