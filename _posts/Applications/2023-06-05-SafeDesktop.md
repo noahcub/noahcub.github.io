@@ -30,3 +30,10 @@ En caso de formateo o instalación limpia podemos restaurar el backup que hemos 
 Ficheros:  
 [Iconos de Office](/assets/files/icons.zip)  
 [Ficheros .desktop](/assets/files/links.zip)
+
+
+
+***
+Fuentes:  
+[https://thecheis.com/2023/06/04/guarda-configuracion-escritorio-savedesktop/](https://thecheis.com/2023/06/04/guarda-configuracion-escritorio-savedesktop/)
+
