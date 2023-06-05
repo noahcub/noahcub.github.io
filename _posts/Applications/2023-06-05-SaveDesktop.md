@@ -1,12 +1,12 @@
 ---
 title: SaveDesktop - Backup de configuracion escritorio Gnome
-date: 2023-06-05 10:00:00 +0100
+date: 2023-06-04 09:00:00 +0100
 categories: [Applications]
 tags: [software, tips]     # TAG names should always be lowercase
 img_path: /assets/pictures/
 author: <noah>
 ---
-## Añadir accesos directos de Office Online a Gnome
+## Backup de la configuración del escritorio Gnome
 
 Cuando hacemos una instalación limpia en el equipo siempre lleva su tiempo dejar el escritorio a nuestro gusto. En mi caso que tengo el equipo fijo y el portátil, me gusta que la configuración en los dos sea la misma, por eso cuando descubrí esta aplicación me pareció muy interesante.
 
@@ -30,8 +30,6 @@ En caso de formateo o instalación limpia podemos restaurar el backup que hemos 
 Ficheros:  
 [Iconos de Office](/assets/files/icons.zip)  
 [Ficheros .desktop](/assets/files/links.zip)
-
-
 
 ***
 Fuentes:  
