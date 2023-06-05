@@ -1,5 +1,5 @@
 ---
-title: SafeDesktop - Backup de configuracion escritorio Gnome
+title: SaveDesktop - Backup de configuracion escritorio Gnome
 date: 2023-06-05 10:00:00 +0100
 categories: [Applications]
 tags: [software, tips]     # TAG names should always be lowercase
