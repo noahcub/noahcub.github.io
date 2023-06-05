@@ -23,7 +23,9 @@ Por útlimo sólo queda configurar:
 
 ![savedesktop-1](savedesktop-1.png)
 
+En caso de formateo o instalación limpia podemos restaurar el backup que hemos realizado con SaveDesktoop. 
 
+(NOTA: me queda pendiente realizar la prueba de restauración para ver cual es el resultado real del backup, aunque como realizo los backups semanales con deja-dup es posible que no sea necesario hacer uso de esta aplicación)
 
 Ficheros:  
 [Iconos de Office](/assets/files/icons.zip)  
