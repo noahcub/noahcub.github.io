@@ -341,6 +341,47 @@ Editamos el fichero config.php de nextcloud y añadimos la línea
 ```
 Parece que se solucionó y comenzó a funcionar correctamente la sincronización.
 
+## Servidor en mantenimiento - maintenance mode: true 
+
+En alguna ocasión cuando hay disponible una actualización de nextcloud, el servidor entra en modo mantenimiento (maintenance mode: true) y no inicia. 
+Por lo que he leido significa que tiene pendiente algun tipo de actualización. Para completar la actualización debemos hacer lo siguiente:
+
+Nos conectamos por ssh al NAS y verificamos que el modo de mantenimiento está activado:
+
+Editamos el fichero config.php de nextcloud y añadimos la línea 
+``` bash
+nano /mnt/user/appdata/nextcloud/config/config.php
+```
+Buscamos la línea   'maintenance' => true,
+``` bash
+'maintenance' => true,
+```
+
+Ahora podemos iniciar la actualización:  
+Abrimos una consola en el docker de nextcloud y ejecutamos:
+``` bash
+$ php occ upgrade
+Nextcloud or one of the apps require upgrade - only a limited number of commands are available
+You may use your browser or the occ upgrade command to do the upgrade
+Setting log level to debug
+Updating database schema
+Updated database
+Disabled incompatible app: recognize
+Update app 
+[....]
+Starting code integrity check...
+Finished code integrity check
+Update successful
+Maintenance mode is kept active
+Resetting log level
+```
+
+Quitamos el modo mantenimiento:
+``` bash
+'maintenance' => false,
+```
+
+Reiniciamos el contenedor y ya debería funcionar sin problemas.
 
 ***   
 Fuentes y enlaces de interés que ayudaran a complementar esta guía:  
@@ -348,4 +389,7 @@ Fuentes y enlaces de interés que ayudaran a complementar esta guía:
 Instalación Nextcloud:  
 [https://telegra.ph/Como-configurar-SWAG-como-proxy-inverso-en-Unraid-y-cualquier-otro-NAS-usando-docker-05-09](https://telegra.ph/Como-configurar-SWAG-como-proxy-inverso-en-Unraid-y-cualquier-otro-NAS-usando-docker-05-09)  
 [https://forum.openmediavault.org/index.php?thread/28216-how-to-nextcloud-with-swag-letsencrypt-using-omv-and-docker-compose/](https://forum.openmediavault.org/index.php?thread/28216-how-to-nextcloud-with-swag-letsencrypt-using-omv-and-docker-compose/)  
+[https://docs.nextcloud.com/server/latest/admin_manual/maintenance/backup.html](https://docs.nextcloud.com/server/latest/admin_manual/maintenance/backup.html)
+[https://docs.nextcloud.com/server/latest/admin_manual/maintenance/manual_upgrade.html](https://docs.nextcloud.com/server/latest/admin_manual/maintenance/manual_upgrade.html)
+
 
