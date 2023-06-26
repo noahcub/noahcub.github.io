@@ -53,7 +53,7 @@ Por útlimo este es el resultado total:
 
 ![swagmodsok](swag_mods_ok.png)
 
-Ya tenemos operativo el Dashboard:
+Ya tenemos operativo el Dashboard. Para acceder ---> http://192.168.1.xxx:81
 
 ![Dashboard](dashboard.png)
 
@@ -133,7 +133,8 @@ Dentro de filter.d tenemos muchos ejemplos para filtros de distintos servicios.
 Probamos si funciona la configuración aplicada:
 
 ``` bash
-docker exec swag fail2ban-regex /nextcloud/nextcloud.log /config/fail2ban/filter.d/nextcloud.local
+docker exec swag fail2ban-regex /nextcloud-logs/nextcloud.log /config/fail2ban/filter.d/nextcloud.conf
+
 ```
 Debería salir algo similar a esto:
 
@@ -193,13 +194,63 @@ docker exec swag fail2ban-client unban <ip address>
 
 ### Habilitar notificaciones DISCORD de los baneos fail2ban
 
-F2B Discord Notification - Docker mod which allows Fail2Ban Discord embeds
+[F2B Discord Notification](https://github.com/linuxserver/docker-mods/tree/swag-f2bdiscord) - Docker mod which allows Fail2Ban Discord embeds
 
 ### Geoblock
 
+Para configurar el bloqueo por geolocalización tenemos dos opciones:
+[MAXMIND](https://github.com/linuxserver/docker-mods/tree/swag-maxmind) o [DBIP](https://github.com/linuxserver/docker-mods/tree/swag-dbip).  
+En mi caso voy a usar la primera Maxmind.
+Una vez registrados en MAXMIND tenemos que genera una licence key para que funcione:
 
+![geoblock-1](geoblock-1.png)
+![geoblock-2](geoblock-2.png)
 
+Una vez creada la key modificamos el contenedor docker siguiendo las instrucciones del github de [MAXMIND](https://github.com/linuxserver/docker-mods/tree/swag-maxmind). Si tenemos varios MODS, como es mi caso, los separamos con "|":  
 
+![geoblock-3](geoblock-3.png)
+
+Añadimos la licence key como una nueva variable en el contenedor de swag:
+![geoblock-4](geoblock-4.png)
+
+Quedando definitivamente así:  
+![geoblock-5](geoblock-5.png)
+
+Dentro de la configuración del contenedor swag modificamos la configuración del fichero nginx.conf:
+
+``` bash
+cd /mnt/user/appdata/swag/nginx
+nano nginx.conf
+```
+y añadimos lo siguiente en la sección http:
+
+``` bash
+include /config/nginx/maxmind.conf;
+```
+Luego configuramos nuestro fichero maxmind.conf según instrucciones de [https://virtualize.link/secure/](https://virtualize.link/secure/).  
+
+Por último, añadimos la siguiente configuración en nuestros ficheros subdomain.conf de cada aplicación que usemos con swag:
+
+``` bash
+cd /mnt/user/appdata/swag/nginx/proxy-confs
+nano nextcloud.subdomain.conf
+```
+``` bash
+ server {
+     listen 443 ssl;
+     listen [::]:443 ssl;
+
+     server_name some-app.*;
+     include /config/nginx/ssl.conf;
+     client_max_body_size 0;
+
+     if ($lan-ip = yes) { set $geo-whitelist yes; }
+     if ($geo-whitelist = no) { return 404; }
+
+     location / {
+``` 
+
+Reiniciamos swag para que se apliquen los cambios...  
 
 ***   
 Fuentes y enlaces de interés que ayudaran a complementar esta guía:  

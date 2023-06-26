@@ -211,6 +211,11 @@ Al instalar el contenedor de nextcloud dice que el proxy inverso debe comunicars
 Para que funcione he dejado el fichero de configuración de swag nextcloud.subdomain.conf de la siguiente forma:  
 
 ``` bash
+cd /mnt/user/appdata/swag/nginx/proxy-confs
+nano nextcloud.subdomain.conf
+```
+
+``` bash
 server {
     listen 443 ssl;
     listen [::]:443 ssl;
