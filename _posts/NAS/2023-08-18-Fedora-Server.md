@@ -59,6 +59,7 @@ Copiar nuestra clave ssh al servidor (despues podemos deshabilitar el acceso por
  ssh-copy-id user@192.168.1.22
 ```
 
+
 ### Configuramos zerotier para acceder desde el exterior de la LAN:
 ``` bash
 curl -s https://install.zerotier.com | sudo bash
@@ -136,11 +137,115 @@ ln -s /srv/CCTV/ CCTV
 ```
 En su momento estuve haciendo pruebas para que el usuario pudiera acceder por ftp directamente a la carpeta **/srv/CCTV** pero no había manera de acceder y como no tenía ganas de buscar información o perder el tiempo decidí arreglarlo con un enlace simbólico.
 
+Con la finalidad de poder acceder a la carpeta donde se graban los datos del CCTV es importante hacer un cambio en los permisos del usuario que realiza las grabaciones en el servidor.  
+Vamos a modificar los permisos por defecto del usuario que deja los ficheros a través del ftp:
+
+``` bash
+[root@www ~]# nano /etc/vsftpd/vsftpd.conf
+```
+Modificamos la siguiente línea:
+``` bash
+# Default umask for local users is 077. You may wish to change this to 022,
+# if your users expect that (022 is used by most other ftpd's)
+local_umask=022
+```
+Por defecto el valor es 022 y lo vamos a modificar a 002 ya que el usuario con el que acceso habitualmente al servidor pertenece al mismo grupo que el usuario que crea los ficheros con las grabaciones.  
+umask básicamente lo que hace es enmascarar los permisos que no deseamos:  
+local_umask=022 ---> otorga los siguientes permisos 755  
+local_umask=002 ---> otorga los siguientes permisos 775  
+**Por tanto, cambiamos la línea por lo siguiente para que los ficheros subidos al servidor tengan los permisos 775:**
+``` bash
+# Default umask for local users is 077. You may wish to change this to 022,
+# if your users expect that (022 is used by most other ftpd's)
+local_umask=002
+```
 
 
+### Configuración de smb con SELinux activo y el Firewall
+
+``` bash
+sudo dnf install samba
+```
+
+Creamos el grupo work para trabajar con samba y añado mi usuario al grupo:
+
+``` bash
+groupadd work
+usermod -a -G work user1
+```
+
+En este punto debemos revisar los permisos de la carpeta que vamos a compartir a través de samba. En mi caso voy a compartir la carpeta **/srv**.  
+
+Configuración de SELinux:
+``` bash
+setsebool -P samba_export_all_ro=1 samba_export_all_rw=1
+getsebool -a | grep samba_export
+semanage fcontext -at samba_share_t "/srv(/.*)?"
+restorecon /srv
+```
+
+Activamos permisos en el firewall para samba:
+
+``` bash
+firewall-cmd --permanent --add-service=samba
+firewall-cmd --reload
+```
+
+Por último toca configurar **smb.conf**:
+``` bash
+sudo nano /etc/samba/smb.conf
+``` 
+
+``` bash
+[SRV]
+browsable=yes
+path=/srv
+public=no
+valid users=@work
+write list=@work
+writeable=yes
+create mask=0770
+force create mode=0770
+force group=work
+```
+
+Verificamos que la configuración sea correcta:
+``` bash
+testparm
+```
+
+Y deberíamos ver una salida simiar a esta:
+``` bash
+[user@localhost srv]$ testparm
+Load smb config files from /etc/samba/smb.conf
+Loaded services file OK.
+Weak crypto is allowed by GnuTLS (e.g. NTLM as a compatibility fallback)
+
+Server role: ROLE_STANDALONE
+
+Press enter to see a dump of your service definitions
+```
+
+Por último, debemos asignar a los usuarios que usen samba contraseña a nivel samba:
+``` bash
+smbpasswd -a user1
+```
+
+Reiniciamos el servicio y comprobamos su estado:
+``` bash
+systemctl start smb
+systemctl enable smb
+systemctl status smb
+```
+
+Desde nuestro equipo deberíamos ya tener acceso al sistema:
+``` bash
+smb://[server-IP]
+```
 
 
 ***   
 Fuentes y enlaces de interés que ayudaran a complementar esta guía:  
 
-[https://www.server-world.info/en/note?os=Fedora_32&p=ftp&f=1](https://www.server-world.info/en/note?os=Fedora_32&p=ftp&f=1)
+[https://www.server-world.info/en/note?os=Fedora_32&p=ftp&f=1](https://www.server-world.info/en/note?os=Fedora_32&p=ftp&f=1)  
+[https://unixcop.com/install-samba-server-with-selinux-and-firewalld-enabled/](https://unixcop.com/install-samba-server-with-selinux-and-firewalld-enabled/)
