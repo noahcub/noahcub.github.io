@@ -46,17 +46,14 @@ Conectamos el teléfono al ordenador y activamos **Transferencia de Archivos** e
 Ahora nos vamos a la terminal de nuestro ordenador y testeamos que detecta el teléfono:
 
 ```bash
-adb devices
-```
-
-Nos debería salir algo similar a esto:
-
-```bash
+[noah@envy ~]$ 
+╰─ adb devices
 * daemon not running; starting now at tcp:5037
 * daemon started successfully
 List of devices attached
 967fd02	device
 ```
+Vemos que detectamos el teléfono, procedemos con el cambio: 
 ```bash
 [noah@envy ~]$ 
 ╰─ adb root   
