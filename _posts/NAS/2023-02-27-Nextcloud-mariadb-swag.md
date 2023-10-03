@@ -348,7 +348,7 @@ Por lo que he leido significa que tiene pendiente algun tipo de actualización. 
 
 Nos conectamos por ssh al NAS y verificamos que el modo de mantenimiento está activado:
 
-Editamos el fichero config.php de nextcloud y añadimos la línea 
+Editamos el fichero config.php de nextcloud: 
 ``` bash
 nano /mnt/user/appdata/nextcloud/config/config.php
 ```
