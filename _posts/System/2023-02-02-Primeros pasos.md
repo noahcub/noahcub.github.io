@@ -37,14 +37,10 @@ sudo dnf install openssl unrar p7zip p7zip-plugins
 Principales codecs multimedia:
 ``` bash
 sudo dnf install gstreamer1-plugins-bad-free-extras gstreamer1-plugin-openh264 gstreamer1-plugins-good-extras mozilla-openh264 gstreamer1-plugins-bad-free-fluidsynth gstreamer1-plugins-bad-free-wildmidi gstreamer1-svt-av1
+sudo dnf install vlc
 ``` 
 
 Por defecto Fedora ofrece la versión libre para el códec de vídeo H264, que resulta insuficiente. Con la anterior orden ampliamos el soporte, pero si usamos Firefox debemos efectuar un pequeño cambio: Menú > Complementos y temas > Plugins, y allí activaremos el códec Open H264 de Cisco. Esta información ha sido obtenida de la web [thecheis.com](https://thecheis.com/2023/08/09/puesta-a-punto-intel-nuc-fedora/).  
-
-Después de habilitar RPM Fusion ya podemos instalar por ejemplo VLC
-``` bash
-sudo dnf install vlc
-```
 
 Añadimos el repositorio de Flathub:
 ``` bash
