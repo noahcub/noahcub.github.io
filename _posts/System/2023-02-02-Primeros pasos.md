@@ -83,7 +83,21 @@ Ordenación de directorios antes de los ficheros:
 Configuraciones de papelera de reciclaje:
 ![Foto.png](automatically-delete-trash-content.png)
 
-
+***Nota: Lista de flatpak que he instalado a mayores de lo que había:***
+``` bash
+Warp                                    app.drey.Warp                                         0.6.1      stable        flathub   system
+teams-for-linux                         com.github.IsmaelMartinez.teams_for_linux             1.3.19     stable        flathub   system
+Flatseal                                com.github.tchx84.Flatseal                            2.1.0      stable        flathub   system
+IntelliJ IDEA Community                 com.jetbrains.IntelliJ-IDEA-Community                 2023.2.5   stable        flathub   system
+Extension Manager                       com.mattjakeman.ExtensionManager                      0.4.3      stable        flathub   system
+Warehouse                               io.github.flattool.Warehouse                          1.3.0      stable        flathub   system
+Kooha                                   io.github.seadve.Kooha                                2.2.4      stable        flathub   system
+SaveDesktop                             io.github.vikdevelop.SaveDesktop                      2.9        stable        flathub   system
+Photoflare                              io.photoflare.photoflare                              1.6.13     stable        flathub   system
+Joplin                                  net.cozic.joplin_desktop                              2.12.19    stable        flathub   system
+Geary                                   org.gnome.Geary                                       44.1       stable        fedora    system
+Kasts                                   org.kde.kasts                                         23.08.1    stable        fedora    system
+``` 
 
 ***
 Fuentes:  
