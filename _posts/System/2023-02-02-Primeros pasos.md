@@ -99,6 +99,34 @@ Geary                                   org.gnome.Geary                         
 Kasts                                   org.kde.kasts                                         23.08.1    stable        fedora    system
 ``` 
 
+***Nota: Lista de paquetes instalados por dnf:***
+``` bash
+    8  sudo dnf install vlc conky zsh
+   14  sudo dnf install teams
+   17  sudo dnf install gnome-tweaks gnome-extensions-app
+   19  sudo dnf install timeshift
+   20  sudo dnf install firewall-config firewall-applet
+   28  sudo dnf install translate-shell
+   31  sudo dnf install nvme-cli
+   38  sudo dnf install etherwake
+   39  sudo dnf install ether-wake
+   40  sudo dnf install net-tools
+   43  sudo dnf install thunderbird # Ya no lo uso, ahora uso Geary
+   55  sudo dnf install wireguard-tools
+   72  sudo dnf install code
+  149  sudo dnf install util-linux-user
+  456  sudo dnf install codium
+  794  sudo dnf install nextcloud-client-nautilus nextcloud-client
+ 1013  sudo dnf install brave-browser
+ 1016  sudo dnf install photoflare
+ 1295  sudo dnf install telegram-desktop
+ 1965  sudo dnf install steam
+ 2291  sudo dnf install dconf-editor
+ 2348  sudo dnf install htop
+ 2351  sudo dnf install gstreamer1-plugins-bad-free-extras gstreamer1-plugin-openh264 gstreamer1-plugins-good-extras mozilla-openh264 gstreamer1-plugins-bad-free-fluidsynth gstreamer1-plugins-bad-free-wildmidi gstreamer1-svt-av1
+ 2352  sudo dnf install openssl unrar p7zip p7zip-plugins
+``` 
+
 ***
 Fuentes:  
 [https://itsfoss.com/things-to-do-after-installing-fedora/](https://itsfoss.com/things-to-do-after-installing-fedora/)  
