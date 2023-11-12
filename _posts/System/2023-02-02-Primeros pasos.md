@@ -56,7 +56,13 @@ Instalamos las aplicaciones esenciales para personalizar Gnome:
 ``` bash
 sudo dnf install gnome-tweaks gnome-extensions-app
 ```
-Instalamos también Extension Manager desde el administrador de Software de Gnome (es una aplicación Flatpak).
+Instalamos también Extension Manager desde el administrador de Software de Gnome (es una aplicación Flatpak).  
+
+Instalamos Flatseal y Warehouse, que son aplicaciones de Flatpak para gestionar permisos y almacenamientos de estas aplicaciones. 
+![flatpak-admin.png](flatpak-admin.png)
+
+Extensiones instaladas:
+![Foto.png](extensiones-instaladas.png)
 
 Habilitamos Maximizar y Minimizar en las ventanas:
 
@@ -76,6 +82,8 @@ Ordenación de directorios antes de los ficheros:
 
 Configuraciones de papelera de reciclaje:
 ![Foto.png](automatically-delete-trash-content.png)
+
+
 
 ***
 Fuentes:  
