@@ -130,7 +130,16 @@ Kasts                                   org.kde.kasts                           
  2348  sudo dnf install htop
  2351  sudo dnf install gstreamer1-plugins-bad-free-extras gstreamer1-plugin-openh264 gstreamer1-plugins-good-extras mozilla-openh264 gstreamer1-plugins-bad-free-fluidsynth gstreamer1-plugins-bad-free-wildmidi gstreamer1-svt-av1
  2352  sudo dnf install openssl unrar p7zip p7zip-plugins
-``` 
+```
+***Nota: Lista de paquetes instalados por apt:***
+``` bash
+sudo apt install zram-tools
+sudo apt install flatpak
+sudo apt install gnome-software-plugin-flatpak
+sudo apt autoremove gnome-games
+sudo apt install nextcloud-desktop nautilus-nextcloud
+
+```
 
 ***
 Fuentes:  
