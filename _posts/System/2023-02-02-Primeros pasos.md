@@ -8,6 +8,7 @@ author: <noah>
 ---
 ## Primeros pasos después de instalar Fedora o Debian
 
+NOTA: Aunque la mayor parte de este post se centra en Fedora, debo decir que Debian para mí siempre será la mejor, por ese motivo he añadido unas notas sobre instalación en Debian.
 Configurar DNF para descargas más rápidas:
 ``` bash
 sudo nano /etc/dnf/dnf.conf
