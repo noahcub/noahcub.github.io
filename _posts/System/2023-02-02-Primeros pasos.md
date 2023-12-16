@@ -6,7 +6,7 @@ tags: [software, config, fedora]     # TAG names should always be lowercase
 img_path: /assets/pictures/
 author: <noah>
 ---
-## Primeros pasos después de instalar Fedora
+## Primeros pasos después de instalar Fedora o Debian
 
 Configurar DNF para descargas más rápidas:
 ``` bash
@@ -46,6 +46,11 @@ Añadimos el repositorio de Flathub:
 ``` bash
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 ```
+***Solo para Debian*** Si queremos tener disponible el software de faltpak en el administrador de software de gnome debemos instalar el siguiente paquete:
+``` bash
+sudo apt install gnome-software-plugin-flatpak
+```
+
 
 En la instalación Fedora no pregunta por el nombre del host. Ahora podemos modificarlo:
 ``` bash
