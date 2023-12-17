@@ -24,6 +24,7 @@ author: <noah>
     - [ ] Alias .zshrc [(fichero .zshrc)](/assets/files/zshrc)
 - [ ] firewall-config y firewall-applet (ojo añadir firewall-applet al arranque del sistema)
 - [ ] Instalación conky [(fichero .conkyrc)](/assets/files/conkyrc)
+- [ ] Traductor de consola (sudo apt install translate-shell)
 
 
 ## Apps 
@@ -68,7 +69,7 @@ author: <noah>
 - [ ] Cambiar primer dia calendario ([Generar locales Debian](/posts/locales/index.html))
 - [ ] Añadir accesos directos Office Online
 - [ ] Nuevo documento en plantillas de nautilus
-- [ ] SaveDesktop - Backup de la configuración de escritorio 
+- [ ] SaveDesktop - Backup de la configuración de escritorio
 
 ## Programming
 - [ ] visual studio code
