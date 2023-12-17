@@ -14,6 +14,10 @@ Instalamos el software necesario a través de DNF:
 ``` bash
 sudo dnf install ruby rubygems ruby-devel gcc gcc-c++ rpm-build
 ```
+Para Debian 12:
+``` bash
+sudo apt install ruby ruby-dev build-essential
+```
 Le decimos al administrador de gemas donde queremos que se instalen las gemas:
 Editamos .zshrc y añadimos esto al final:
 
@@ -22,7 +26,10 @@ Editamos .zshrc y añadimos esto al final:
 export GEM_HOME="$HOME/gems"
 export PATH="$PATH:~/bin"
 export PATH="$HOME/gems/bin:$PATH"
-
+```
+Recargamos el entorno de Zsh:
+``` bash
+source .zshrc
 ```
 Ahora ya podemos instalar las gemas. Instalamos las gemas de jekyll y bundler:
 
