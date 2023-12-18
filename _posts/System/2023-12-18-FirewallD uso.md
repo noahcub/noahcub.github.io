@@ -6,7 +6,7 @@ tags: [software, network, debian]     # TAG names should always be lowercase
 img_path: /assets/pictures/
 author: <noah>
 ---
-## Uso de firewalld una vez instalado  
+## Uso de FirewallD    
 ### NOTA: En Joplin tengo un manual más completo
 Manual de ayuda:
 ``` bash

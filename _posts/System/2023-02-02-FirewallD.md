@@ -6,7 +6,7 @@ tags: [software, network, fedora]     # TAG names should always be lowercase
 img_path: /assets/pictures/
 author: <noah>
 ---
-## Configuración FirewallD
+## FirewallD
 
 **Instalación y configuración del firewallD**
 
