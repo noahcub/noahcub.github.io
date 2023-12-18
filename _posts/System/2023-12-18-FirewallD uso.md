@@ -8,7 +8,7 @@ author: <noah>
 ---
 ## Uso de FirewallD    
 ### NOTA: En Joplin tengo un manual más completo
-Manual de ayuda:
+Manual de ayuda:  
 ``` bash
 firewall-cmd --help
 ```
