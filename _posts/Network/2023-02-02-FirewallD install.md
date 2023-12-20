@@ -1,7 +1,7 @@
 ---
 title: Instalación de FirewallD
 date: 2023-02-02 17:00:00 +0100
-categories: [System]
+categories: [Network]
 tags: [software, network, fedora, debian]     # TAG names should always be lowercase
 img_path: /assets/pictures/
 author: <noah>

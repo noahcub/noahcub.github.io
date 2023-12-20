@@ -1,7 +1,7 @@
 ---
 title: Configuración de FirewallD
 date: 2023-12-18 16:00:00 +0100
-categories: [System]
+categories: [Network]
 tags: [software, network, debian]     # TAG names should always be lowercase
 img_path: /assets/pictures/
 author: <noah>
