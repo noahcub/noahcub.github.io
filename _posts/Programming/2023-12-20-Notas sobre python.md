@@ -65,5 +65,6 @@ pip install --upgrade pip
 ***
 Fuentes:  
 []https://code.tutsplus.com/es/tutorials/understanding-virtual-environments-in-python--cms-28272](https://code.tutsplus.com/es/tutorials/understanding-virtual-environments-in-python--cms-28272)  
+[https://gee.es/2023/05/17/como-creo-un-entorno-de-desarrollo-con-env-en-vscode/](https://gee.es/2023/05/17/como-creo-un-entorno-de-desarrollo-con-env-en-vscode/)
 
 
