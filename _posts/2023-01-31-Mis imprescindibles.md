@@ -34,7 +34,7 @@ author: <noah>
 - [ ] Insync
 - [ ] Nextcloud
 - [ ] Joplin (Flatpak)
-- [ ] Thunderbird
+- [ ] Thunderbird o Geary (Actualmente estoy con Geary)
     - [ ] Idioma thunderbird
 - [ ] Libreoffice
     - [ ] Idioma en Libreoffice - OK
