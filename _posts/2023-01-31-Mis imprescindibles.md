@@ -18,7 +18,7 @@ author: <noah>
 </details>
 
 
-## System
+## System  
 - [ ] quitar entradas antiguas de UEFI
 - [ ] [Instalarción Zsh](/posts/zsh/index.html) 
     - [ ] Alias .zshrc [(fichero .zshrc)](/assets/files/zshrc)
