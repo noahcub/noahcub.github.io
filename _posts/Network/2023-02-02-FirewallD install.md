@@ -1,5 +1,5 @@
 ---
-title: Configuración de FirewallD
+title: Instalación de FirewallD
 date: 2023-02-02 17:00:00 +0100
 categories: [System]
 tags: [software, network, fedora, debian]     # TAG names should always be lowercase
