@@ -45,5 +45,5 @@ Aceptar y dar permisos en el móvil a la aplicación.
 
 ***
 Fuentes:  
-[https://fedoraproject.org/wiki/FirewallD/es](https://fedoraproject.org/wiki/FirewallD/es)
+[https://userbase.kde.org/KDEConnect#Troubleshooting](https://userbase.kde.org/KDEConnect#Troubleshooting)
 
