@@ -57,6 +57,7 @@ author: <noah>
     - [ ] Instalar antes el paquete network-manager-openvpn-gnome
 - [ ] Configuración ZeroTier (ultima versión da fallo en Debian testing)
 - [ ] Configuración Tailscale
+  - [ ] curl -fsSL https://tailscale.com/install.sh | sh (en la web de Tailscale se detalla)
 	- [ ] Instalar extensión Gnome: Tailscale Status
 
 ## Desktop
