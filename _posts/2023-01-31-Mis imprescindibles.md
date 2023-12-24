@@ -52,7 +52,11 @@ author: <noah>
 	- [ ] Con tailscale el recurso compartido en smb es:
 		smb://xxx.xxx.xxx.xxx/Recurso_compartido
 - [ ] Configurar claves ssh con ROUTERS
-- [ ] Configurar Wireguard NAS principal
+- [ ] Configurar el cliente Wireguard de nuestra VPN al NAS (para debian):
+    - [ ] sudo apt install wireguard
+    - [ ] Copiamos el fichero wg0.conf generado por el servidor a la carpeta /etc/wireguard
+    - [ ] sudo wg-quick up wg0 - Conexión a la VPN
+    - [ ] sudo wg-quick down wg0 - Desconexión a la VPN
 - [ ] Configurar VPN de pago en Gnome
     - [ ] Instalar antes el paquete network-manager-openvpn-gnome
 - [ ] Configuración ZeroTier (ultima versión da fallo en Debian testing)
