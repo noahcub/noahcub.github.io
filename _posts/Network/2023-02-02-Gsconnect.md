@@ -43,6 +43,8 @@ En el móvil refrescar para ver dispositivos y debería aparecer el ordenador pa
 
 Aceptar y dar permisos en el móvil a la aplicación.  
 
+Por último, tenemos que dar permisos en firewalld al servicio de GSconnect, no olvidando crear la regla de forma permanente.
+
 ***
 Fuentes:  
 [https://userbase.kde.org/KDEConnect#Troubleshooting](https://userbase.kde.org/KDEConnect#Troubleshooting)
