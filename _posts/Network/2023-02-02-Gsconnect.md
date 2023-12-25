@@ -45,6 +45,10 @@ Aceptar y dar permisos en el móvil a la aplicación.
 
 Por último, tenemos que dar permisos en firewalld al servicio de GSconnect, no olvidando crear la regla de forma permanente.
 
+``` bash
+firewall-cmd --permanent --zone=public --add-service=gsconnect
+```
+
 ***
 Fuentes:  
 [https://userbase.kde.org/KDEConnect#Troubleshooting](https://userbase.kde.org/KDEConnect#Troubleshooting)
