@@ -317,7 +317,7 @@ Por útlimo habría que crear los usuarios e instalar las aplicaciones más inte
 
 a debería funcionar.
 
-## Security & setup warnings
+## Security & setup warnings cron  job error
 En el apartado de setup de Nextcloud nos aparecen los errores del servidor.  
 Uno de los errores es el siguiente: Last background job execution ran 10 hours ago. Something seems wrong.  
 En los foros de Unraid encontré una solución:
@@ -333,6 +333,21 @@ docker exec --user 99 Nextcloud php -f /var/www/html/cron.php
 y programamos que se ejecute cada hora. Si ejecutamos en consola como prueba debería funcionar sin problemas:  
 
 ![unraid-cron-2](unraid-cron-2.png)
+
+## Security & setup warnings cron  job error
+Otro de los errores que obtenemos es el siguiente:  
+This instance is missing some recommended PHP modules. For improved performance and better compatibility it is highly recommended to install them: bz2.
+
+Buscando en los foros de Nextcloud se soluciona de la siguiente forma:  
+Accedemos al contenedor con usuario administrador:
+```bash
+docker exec -u 0 -ti Nextcloud /bin/bash
+```
+y ejecutamos el siguiente comando:
+```bash
+apt-get update && apt-get install -y libbz2-dev && docker-php-ext-install bz2
+```
+Por motivo que desconozco la primera vez que lo ejecutamos Nextcloud sigue dando el mismo error. Sin embargo, según el [mensaje del usuario jn1000](https://help.nextcloud.com/t/docker-image-setup-warning-missing-bz2-after-update-to-nc-28-0-0/176605/6) cuando se hace por segunda vez ya queda corregido el error.  
 
 ## Errores en la sincronización  
 Durante la sincronización Nextcloud daba el siguiente error:
