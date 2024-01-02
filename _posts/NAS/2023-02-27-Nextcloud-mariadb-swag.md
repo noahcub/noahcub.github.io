@@ -317,6 +317,23 @@ Por útlimo habría que crear los usuarios e instalar las aplicaciones más inte
 
 a debería funcionar.
 
+## Security & setup warnings
+En el apartado de setup de Nextcloud nos aparecen los errores del servidor.  
+Uno de los errores es el siguiente: Last background job execution ran 10 hours ago. Something seems wrong.  
+En los foros de Unraid encontré una solución:
+![unraid-cron](unraid-cron.png)
+
+Creamos un script en User Scripts de Unraid con el siguiente texto:
+
+```bash
+echo "START SCANNING FOR NEXTCLOUD FILES&FOLDERS"
+docker exec --user 99 Nextcloud php occ files:scan --all &
+docker exec --user 99 Nextcloud php -f /var/www/html/cron.php
+```
+y programamos que se ejecute cada hora. Si ejecutamos en consola como prueba debería funcionar sin problemas:  
+
+![unraid-cron-2](unraid-cron-2.png)
+
 ## Errores en la sincronización  
 Durante la sincronización Nextcloud daba el siguiente error:
 
@@ -391,5 +408,6 @@ Instalación Nextcloud:
 [https://forum.openmediavault.org/index.php?thread/28216-how-to-nextcloud-with-swag-letsencrypt-using-omv-and-docker-compose/](https://forum.openmediavault.org/index.php?thread/28216-how-to-nextcloud-with-swag-letsencrypt-using-omv-and-docker-compose/)  
 [https://docs.nextcloud.com/server/latest/admin_manual/maintenance/backup.html](https://docs.nextcloud.com/server/latest/admin_manual/maintenance/backup.html)
 [https://docs.nextcloud.com/server/latest/admin_manual/maintenance/manual_upgrade.html](https://docs.nextcloud.com/server/latest/admin_manual/maintenance/manual_upgrade.html)
+[https://forums.unraid.net/topic/88504-support-knex666-nextcloud/page/21/](https://forums.unraid.net/topic/88504-support-knex666-nextcloud/page/21/)
 
 
