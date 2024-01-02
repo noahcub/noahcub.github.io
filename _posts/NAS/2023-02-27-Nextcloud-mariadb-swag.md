@@ -398,7 +398,7 @@ Quitamos el modo mantenimiento:
 'maintenance' => false,
 ```
 
-Reiniciamos el contenedor y ya debería funcionar sin problemas.
+Reiniciamos el contenedor y ya debería funcionar sin problemas.  
 
 ***   
 Fuentes y enlaces de interés que ayudaran a complementar esta guía:  
