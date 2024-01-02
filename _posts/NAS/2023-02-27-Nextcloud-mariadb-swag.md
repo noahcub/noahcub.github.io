@@ -347,7 +347,7 @@ y ejecutamos el siguiente comando:
 ```bash
 apt-get update && apt-get install -y libbz2-dev && docker-php-ext-install bz2
 ```
-Por motivo que desconozco la primera vez que lo ejecutamos Nextcloud sigue dando el mismo error. Sin embargo, según el [mensaje del usuario jn1000](https://help.nextcloud.com/t/docker-image-setup-warning-missing-bz2-after-update-to-nc-28-0-0/176605/6) cuando se hace por segunda vez ya queda corregido el error.  
+Con esto debería estar solucionado. Por motivo que desconozco en la instancia de test que tengo de nextcloud a primera vez que lo ejecutamos Nextcloud sigue dando el mismo error. Algo parecido le pasaba a un usuario del foro de nextcloud. Sin embargo, según el [mensaje del usuario jn1000](https://help.nextcloud.com/t/docker-image-setup-warning-missing-bz2-after-update-to-nc-28-0-0/176605/6) cuando se hace por segunda vez ya queda corregido el error.  
 
 ## Errores en la sincronización  
 Durante la sincronización Nextcloud daba el siguiente error:
