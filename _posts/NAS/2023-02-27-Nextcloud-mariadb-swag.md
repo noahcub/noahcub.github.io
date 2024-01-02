@@ -334,7 +334,7 @@ y programamos que se ejecute cada hora. Si ejecutamos en consola como prueba deb
 
 ![unraid-cron-2](unraid-cron-2.png)
 
-## Security & setup warnings cron  job error
+## Security & setup warnings error PHP modules - bz2
 Otro de los errores que obtenemos es el siguiente:  
 This instance is missing some recommended PHP modules. For improved performance and better compatibility it is highly recommended to install them: bz2.
 
