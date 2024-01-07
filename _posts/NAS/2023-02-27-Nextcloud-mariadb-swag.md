@@ -373,6 +373,19 @@ Editamos el fichero config.php de nextcloud y añadimos la línea
 ```
 Parece que se solucionó y comenzó a funcionar correctamente la sincronización.
 
+Error de sincronización en ficheros grandes:
+``` bash
+"Connection closed" message when syncing files larger then +- 100Mb
+```
+Después de mucho buscar encontré en [github](https://github.com/nextcloud/desktop/issues/4278) una solución:
+``` bash
+nano $HOME/.config/Nextcloud/nextcloud.cfg
+```
+y añadimos la siguiente línea al fichero de configuración de nuestro cliente nextcloud en la sección [General]:
+``` bash
+maxChunkSize=50000000
+```
+Y solucionado, debería funcionar sin problemas.
 ## Servidor en mantenimiento - maintenance mode: true 
 
 En alguna ocasión cuando hay disponible una actualización de nextcloud, el servidor entra en modo mantenimiento (maintenance mode: true) y no inicia. 
