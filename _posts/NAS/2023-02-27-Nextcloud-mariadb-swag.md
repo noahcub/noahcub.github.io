@@ -355,7 +355,7 @@ Durante la sincronización Nextcloud daba el siguiente error:
 ``` bash
 network error 99 nextcloud
 ```
-La sincronización iba como a golpes y no acababa de funcionar correctamente.  
+***La sincronización iba como a golpes y no acababa de funcionar correctamente.***  
 
 Buscando soluciones encontré esto por github:
 
@@ -373,7 +373,7 @@ Editamos el fichero config.php de nextcloud y añadimos la línea
 ```
 Parece que se solucionó y comenzó a funcionar correctamente la sincronización.
 
-Error de sincronización en ficheros grandes:
+***Error de sincronización en ficheros grandes:***
 ``` bash
 "Connection closed" message when syncing files larger then +- 100Mb
 ```
