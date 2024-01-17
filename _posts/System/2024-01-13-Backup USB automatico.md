@@ -6,10 +6,7 @@ tags: [Apps, software, debian]     # TAG names should always be lowercase
 author: <noah>
 ---
 
-
-## Realizar un backup del pendrive al conectar al equipo con reglas UDEV
-
-**Creamos el script de backup con los comandos de rsync**
+### Script de backup con rsync
 
 Con este pequeño script  hacemos el backup del USB del trabajo a nuestro disco duro:  
 	Origen:  /ruta origen  
@@ -28,11 +25,10 @@ Con este pequeño script  hacemos el backup del USB del trabajo a nuestro disco 
 Comment
 
 rsync --progress --stats --delete  -avhiu /media/user/Nuevo\ vol/Origen /home/user/Destino
-
-
 ```
 
-**Creamos la regla udev para que se ejecute nuestro script al conectar el usb**  
+### Configuración con reglas UDEV  
+
 Primero debemos obtener el idProduct y el idVendor del nuestro usb
 ``` bash
 lsusb
@@ -56,7 +52,7 @@ udevadm control --reload
 ```
 Este método funcionaria de maravilla para usb normales. El problema es que mi usb del trabajo está encritado con bitlocker y cuando se ejecuta la regla udev todavía no está montada la partción del usb porque antes tenemos que introducir la contraseña de bitlocker, por lo que no funciona mi backup automático.
 
-## Realizar un backup del pendrive al conectar al equipo con servicio SYSTEMD  
+### Configuración con systemd
 
 La solución al problema anterior es crear un servicio systemd que ejecute mi script de backup cuando se monta la partición que nos interesa.  
 
@@ -79,7 +75,7 @@ Para buscar las media label:
 ``` bash
 sudo systemctl list-units -t mount
 ``` 
-Aqui aparecerá una etiqueta similar a esta:  
+Aqui aparecerá una etiqueta similar a esta entre otras muchas: 
 
 ``` bash
 media-user-Work.mount  
@@ -98,7 +94,7 @@ No importa porque cuando se ejecute el servicio al insertar el pendrive debería
 
 ***  
 Fuentes:  
-**Systemd**
+***Systemd***  
 [https://askubuntu.com/questions/25071/how-to-run-a-script-when-a-specific-flash-drive-is-mounted](https://askubuntu.com/questions/25071/how-to-run-a-script-when-a-specific-flash-drive-is-mounted)
 
 
