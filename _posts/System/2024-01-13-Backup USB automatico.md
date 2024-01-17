@@ -7,7 +7,7 @@ author: <noah>
 ---
 
 
-## Realizar un backup del pendrive al conectar al equipo 
+## Realizar un backup del pendrive al conectar al equipo con reglas UDEV
 
 **Creamos el script de backup con los comandos de rsync**
 
@@ -54,3 +54,51 @@ Por último, recargamos las reglas udev para que el sistema ejecute el script al
 ``` bash
 udevadm control --reload
 ```
+Este método funcionaria de maravilla para usb normales. El problema es que mi usb del trabajo está encritado con bitlocker y cuando se ejecuta la regla udev todavía no está montada la partción del usb porque antes tenemos que introducir la contraseña de bitlocker, por lo que no funciona mi backup automático.
+
+## Realizar un backup del pendrive al conectar al equipo con servicio SYSTEMD  
+
+La solución al problema anterior es crear un servicio systemd que ejecute mi script de backup cuando se monta la partición que nos interesa.  
+
+Creamos nuestro backup_usb.service en /home/user/.config/systemd/user:
+``` bash
+cat backup_usb.service
+[Unit]
+Description=Backup pendrive trabajo
+Requires=media-label-user.mount
+After=media-label-user.mount
+
+[Service]
+ExecStart=/home/user/Apps/backup_usb.sh
+
+[Install]
+WantedBy=media-label-user.mount
+```
+
+Para buscar las media label:
+``` bash
+sudo systemctl list-units -t mount
+``` 
+Aqui aparecerá una etiqueta similar a esta:  
+
+``` bash
+media-user-Work.mount  
+```
+Por último habilitamos nuestro servicio:  
+``` bash
+systemctl --user enable backup_usb.service
+```
+Al crear el enlace simbólico nos dirá el sistema que estamos creando un servicio con una dependencia que no existe:
+``` bash
+Unit /home/user/.config/systemd/user/backup_usb.service is added as a dependency to a non-existent unit media-user-Work.mount.
+```
+No importa porque cuando se ejecute el servicio al insertar el pendrive debería funcionar correctamente ya que la unidad se crea en ese momento.  
+
+
+
+***  
+Fuentes:  
+**Systemd**
+[https://askubuntu.com/questions/25071/how-to-run-a-script-when-a-specific-flash-drive-is-mounted](https://askubuntu.com/questions/25071/how-to-run-a-script-when-a-specific-flash-drive-is-mounted)
+
+
