@@ -20,7 +20,7 @@ Path: /data1: /mnt/user/carpeta_que_queremos_tenga_acceso_el_docker_Syncthing
 
 Es muy importante el datos que muestra en este punto: ***Container Path: /data1 Data1*** porque es la ruta de la carpeta dentro de syncthing.
 
-![syncthing.png](syncthing.png)
+![syncthing.png](syncthing.png)  
 
 Una vez instalado accedemos al webUI de la aplicación.  
 Nos dirá que pongamos un password al usuario y comienza la configuración.
