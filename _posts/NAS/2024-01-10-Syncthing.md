@@ -8,7 +8,7 @@ author: <noah>
 ---
 ## Instalación de Syncthing en Unraid y Debian
 
-## Unraid
+## Unraid NAS
 
 La instalación se realizará con el docker de Syncthing que nos aparece en la búsqueda de aplicaciones del respositorio linuxserver's Repository:
 
