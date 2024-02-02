@@ -16,7 +16,7 @@ Tenemos que crear nuestro bot a través de [@BotFather](https://t.me/BotFather).
 
 Para obtener el id del chat usamos [@GetIDs bot](https://t.me/getidsbot)
 
-``` bash
+``` yaml
 telegram_bot:
   - platform: polling
     api_key: xxxxxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
