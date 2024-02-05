@@ -428,6 +428,18 @@ Quitamos el modo mantenimiento:
 
 Reiniciamos el contenedor y ya debería funcionar sin problemas.  
 
+## Gnome muestra duplicado el acceso a Nextcloud en Nautilus  
+La solución a este problema la he encontrado en el [siguiente hilo de github](https://github.com/nextcloud/desktop/issues/6218).  El usuario **mbiebl** aporta la siguiente solución:  
+Editamos el fichero /usr/share/applications/com.nextcloud.desktopclient.nextcloud.desktop y eliminamos o comentamos las siguientes líneas:  
+
+``` bash
+Implements=org.freedesktop.CloudProviders
+
+[org.freedesktop.CloudProviders]
+BusName=com.nextcloudgmbh.Nextcloud
+ObjectPath=/com/nextcloudgmbh/Nextcloud
+```
+
 ***   
 Fuentes y enlaces de interés que ayudaran a complementar esta guía:  
 
