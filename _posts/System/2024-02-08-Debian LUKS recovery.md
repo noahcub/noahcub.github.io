@@ -97,8 +97,8 @@ Si hay algún error nos lo dirá el comando y podemos corregir lo que sea necear
 
 ## Instalar Debian en particiones LVM NO encriptadas ya existentes conservando datos  
 
-En este caso es todo muy sencillo, ya que el instalador de debian nos detectará el formato que tiene el disco y simplemente tenemos que indicar que particiones queremos que se formateen y cuales no.  
-Debemos dejar el sistema configurado como se muestra en la imangen y en ningún momento es preciso salir del instalador a una consola.
+En este caso es todo muy sencillo. Seleccionamos particionado manual y el instalador de Debian nos detectará la estructura de particiones que tiene el disco y simplemente tenemos que indicar que volumenes queremos que se formateen y cuales no.  
+Debemos dejar el sistema configurado como se muestra en la imangen y en ningún momento es preciso salir del instalador a una consola. (NOTA: esta imagen está aprovechada del apartado donde se hacía con encriptado, pero es exactamente lo mismo).
 
 ![debian8.png](debian8.png)  
 
