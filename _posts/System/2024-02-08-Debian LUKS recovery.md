@@ -6,8 +6,7 @@ tags: [terminal, software, debian]     # TAG names should always be lowercase
 img_path: /assets/pictures
 author: <noah>
 ---
-## Instalar Debian en particiones LVM ya existentes conservando datos
-
+## Instalar Debian en particiones LVM encriptadas ya existentes conservando datos
 
 Arrancamos con el médio de instalación de Debian y seleccionamos Opciones avanzadas - Instalación experta
 
@@ -96,6 +95,12 @@ Si algo ha ido mal en la generación de initramfs podemos iniciar nuevamente des
 ```
 Si hay algún error nos lo dirá el comando y podemos corregir lo que sea neceario.  
 
+## Instalar Debian en particiones LVM NO encriptadas ya existentes conservando datos  
+
+En este caso es todo muy sencillo, ya que el instalador de debian nos detectará el formato que tiene el disco y simplemente tenemos que indicar que particiones queremos que se formateen y cuales no.  
+Debemos dejar el sistema configurado como se muestra en la imangen y en ningún momento es preciso salir del instalador a una consola.
+
+![debian8.png](debian8.png)  
 
 
 ***
