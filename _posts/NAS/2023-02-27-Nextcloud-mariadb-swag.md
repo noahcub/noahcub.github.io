@@ -349,6 +349,33 @@ apt-get update && apt-get install -y libbz2-dev && docker-php-ext-install bz2
 ```
 Con esto debería estar solucionado. Por motivo que desconozco en la instancia de test que tengo de nextcloud a primera vez que lo ejecutamos Nextcloud sigue dando el mismo error. Algo parecido le pasaba a un usuario del foro de nextcloud. Sin embargo, según el [mensaje del usuario jn1000](https://help.nextcloud.com/t/docker-image-setup-warning-missing-bz2-after-update-to-nc-28-0-0/176605/6) cuando se hace por segunda vez ya queda corregido el error.  
 
+# Server has no maintenance window start time configured
+Otro de los errores que obtenemos es el siguiente:  
+Server has no maintenance window start time configured.  
+
+Según la [documentación de Nextcloud](https://docs.nextcloud.com/server/28/admin_manual/configuration_server/config_sample_php_parameters.html#maintenance) y [este hilo del foro](https://help.nextcloud.com/t/server-has-no-maintenance-window-start-time-configured/180480/1) se soluciona añadiendo el siguiente texto en el fichero config.php:
+Accedemos al contenedor con usuario administrador:
+```bash
+cd /mnt/user/appdata/nextcloud/config
+nano config.php
+```
+y añadimos el siguiente texto al final del fichero :
+```bash
+  'maintenance_window_start' => 1,
+```
+
+quedando así:
+```bash
+  [....]
+  'loglevel' => 2,
+  'maintenance' => false,
+  'maintenance_window_start' => 1,
+);
+```
+
+Con esto debería estar solucionado. Por motivo que desconozco en la instancia de test que tengo de nextcloud a primera vez que lo ejecutamos Nextcloud sigue dando el mismo error. Algo parecido le pasaba a un usuario del foro de nextcloud. Sin embargo, según el [mensaje del usuario jn1000](https://help.nextcloud.com/t/docker-image-setup-warning-missing-bz2-after-update-to-nc-28-0-0/176605/6) cuando se hace por segunda vez ya queda corregido el erro
+
+
 ## Errores en la sincronización  
 Durante la sincronización Nextcloud daba el siguiente error:
 
