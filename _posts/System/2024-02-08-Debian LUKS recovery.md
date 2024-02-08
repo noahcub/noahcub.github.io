@@ -8,7 +8,7 @@ author: <noah>
 ---
 ## Instalar Debian en particiones LVM ya existentes conservando datos
 
-**Instalación zsh**
+
 Arrancamos con el médio de instalación de Debian y seleccionamos Opciones avanzadas - Instalación experta
 
 ![debian.png](debian.png)  
