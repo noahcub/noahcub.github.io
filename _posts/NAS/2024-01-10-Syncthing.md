@@ -6,7 +6,7 @@ tags: [software, config, unraid]     # TAG names should always be lowercase
 img_path: /assets/pictures/Nas
 author: <noah>
 ---
-## Instalación de Syncthing en Unraid y Debian
+## Instalación de Syncthing en Unraid, Debian y Fedora
 
 ## Unraid NAS
 
@@ -62,7 +62,7 @@ sudo apt install syncthingtray
 Para iniciar el servicio tenemos dos opciones: crear un servicio en systemd o iniciarlo con la aplicación de syncthingtray.  
 En el portatil lo he configurado con servicio systemd, pero en el fijo por algún problema syncthingtray no detectaba que estaba el servicio corriendo y he decidido hacerlo mediante el Startup Applications como cualquier otra aplicación.  
 
-## Servicio Syncthing con Systemd  
+## Servicio Syncthing con Systemd para Debian   
 
 A continuación creamos un servicio systemd:
 
@@ -72,6 +72,34 @@ sudo systemctl start syncthing@mi_usuario.service
 
 sudo systemctl status syncthing@noe.service
 ```
+
+## Fedora  
+
+```bash
+sudo dnf install syncthing
+```
+Podemos instalar la extensión Syncthing Indicator para Gnome desde el gestor Gnome Extensions.  
+
+
+## Servicio Syncthing con Systemd para Fedora    
+
+De forma predeterminada, el servicio de sincronización no está habilitado después de la instalación.  Dependiendo del caso de uso, la sincronización se puede ejecutar como un servicio de todo el sistema para un usuario específico o como un servicio de sesión de usuario real.  
+En Fedora usaremos la segunda opción para usar Syncthing Indicator. En [este enlace](https://src.fedoraproject.org/rpms/syncthing) se explica muy bien la configuración.  
+
+Si queremos que Syncthing Indicator nos funcione correctamente debemos inicar el servicio del siguiente modo:
+
+```bash
+systemctl --user enable --now syncthing.service
+systemctl --user daemon-reload
+systemctl --user restart syncthing.service
+```
+
+
+Para iniciar el servicio tenemos dos opciones: crear un servicio en systemd o iniciarlo con la aplicación de syncthingtray.  
+En el portatil lo he configurado con servicio systemd, pero en el fijo por algún problema syncthingtray no detectaba que estaba el servicio corriendo y he decidido hacerlo mediante el Startup Applications como cualquier otra aplicación.  
+
+
+## Otras configuraciones de los equipos  
 
 En este dispositivo la configuración es similar, pero es necesario tener algunas consas en cuenta, ya que en mis equipos estoy conectado continuamente por VPN al servidor Unraid y me he llevado alguna sorpresa al sincronizar gran cantidad de datos a través de la red movil. 
 
@@ -119,4 +147,5 @@ Fuentes y enlaces de interés que ayudaran a complementar esta guía:
 
 [https://forum.syncthing.net/t/syncthing-restarts-after-sleep-mode-and-rescans-disable/8992](https://forum.syncthing.net/t/syncthing-restarts-after-sleep-mode-and-rescans-disable/8992)  
 [https://www.linuxfordevices.com/tutorials/ubuntu/syncthing-install-and-setup](https://www.linuxfordevices.com/tutorials/ubuntu/syncthing-install-and-setup)  
+[https://src.fedoraproject.org/rpms/syncthing](https://src.fedoraproject.org/rpms/syncthing)  
 
