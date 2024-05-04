@@ -203,6 +203,23 @@ $CONFIG = array (
   'dbuser' => 'xxxxxxxxxxxxxxxxxxxxx',
   'dbpassword' => 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
   'installed' => true,
+  'default_phone_region' => 'ES',
+  'mail_smtpmode' => 'smtp',
+  'mail_smtpsecure' => 'ssl',
+  'mail_sendmailmode' => 'smtp',
+  'mail_from_address' => 'xxxxxxxxxxxxxx',
+  'mail_domain' => 'gmail.com',
+  'mail_smtphost' => 'smtp.gmail.com',
+  'mail_smtpauth' => 1,
+  'mail_smtpname' => 'xxxxxxxxxxxxxxxx',
+  'mail_smtppassword' => 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+  'mail_smtpport' => '465',
+  'bulkupload.enabled' => false,
+  'loglevel' => 0,
+  'maintenance' => false,
+  'maintenance_window_start' => 1,
+);
+
 
 ```
 
