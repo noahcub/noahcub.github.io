@@ -181,27 +181,29 @@ Quedando el fichero finalmente así el fichero de Nextcloud config.php:
 <?php
 $CONFIG = array (
 [.....................]
-  'trusted_domains' => 
-  array (
-    0 => '192.168.1.xxxx:8666',
-    1 => 'nextcloud.xxxxxxxxxxxxxxxxxxxxxxxxxx.duckdns.org',
+ array (
+    0 => '192.168.1.55:8666',
+    1 => 'nextcloud.xxxxxxxxxxxxxxxxxxxxxxxx.com',
   ),
   'datadirectory' => '/var/www/html/data',
   'dbtype' => 'mysql',
-  'version' => '25.0.4.1',
-  'trusted_proxies' => ['swag'],
-  'overwrite.cli.url' => 'https://nextcloud.xxxxxxxxxxxxxxxxxx.duckdns.org/',
-  'overwritehost' => 'nextcloud.xxxxxxxxxxxxxxxxxxxxxxxxx.duckdns.org',
+  'version' => '29.0.0.19',
+  'trusted_proxies' => 
+  array (
+    0 => gethostbyname('swag'), 
+  ),
+  'overwrite.cli.url' => 'https://nextcloud.xxxxxxxxxxxxxxxxxxxxxx.com',
+  'overwritehost' => 'nextcloud.xxxxxxxxxxxxxxxxxxx.com',
   'overwriteprotocol' => 'https',
-  'dbname' => 'nextcloud',
-  'dbhost' => '192.168.1.xxxx:3306',
+  'dbname' => 'xxxxxxxxxxxxxxxxx',
+  'dbhost' => '192.168.1.55:3306',
   'dbport' => '',
   'dbtableprefix' => 'oc_',
   'mysql.utf8mb4' => true,
-  'dbuser' => 'nextcloud_user',
-  'dbpassword' => 'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
+  'dbuser' => 'xxxxxxxxxxxxxxxxxxxxx',
+  'dbpassword' => 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
   'installed' => true,
-);
+
 ```
 
 Al instalar el contenedor de nextcloud dice que el proxy inverso debe comunicarse con Nextcloud por http:  
