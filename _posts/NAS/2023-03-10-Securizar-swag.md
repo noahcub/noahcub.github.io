@@ -101,8 +101,7 @@ Fail2ban ya viene incluido en nustro servidor swag. Es una aplicación que se en
 
 Debemos localizar el fichero de logs de Nextcloud (en este caso, en otro caso sería otra aplicación):
 
-En mi caso, Nextcloud guarda los logs en el volumen Nextcloud-files que configuré al crear el docker en Unraid:
-
+En mi caso, Nextcloud guarda los logs en la ruta /mnt/user/appdata/nextcloud/config. Por defecto Nextcloud lo guarda aquí:
 ``` bash
 Nextcloud-Files pwd
 /mnt/user/Nextcloud-Files
@@ -111,6 +110,38 @@ admin                            index.html
 appdata_oclkxgc09392  files_external  nextcloud.log  
 
 ```
+Nosotros vamos a modificar la ruta del fichero ***nextcloud.log*** para que se guarde en el pool de cache y no vaya a leer todo el tiempo al array:
+``` bash
+➜  nextcloud cd /mnt/user/appdata/nextcloud/config
+➜  config ls
+apache-pretty-urls.config.php  config.php         nextcloud.log             s3.config.php     upgrade-disable-web.config.php
+apcu.config.php                config.php.bak     redis.config.php          smtp.config.php
+apps.config.php                config.sample.php  reverse-proxy.config.php  swift.config.php
+
+```
+``` bash
+➜  nano config.php
+```
+Y añadimos la siguiente línea:
+``` bash
+  'logfile' => '/var/www/html/config/nextcloud.log',
+```
+Que es la ubicación donde queremos guardar el nuevo fichero de logs, quedando así nuestro fichero de configuación:
+``` bash
+   [...]
+  'mail_smtpport' => '465',
+  'bulkupload.enabled' => false,
+  'loglevel' => 0,
+  'logfile' => '/var/www/html/config/nextcloud.log',
+  'maintenance' => false,
+  'maintenance_window_start' => 1,
+);
+```
+Reiniciamos el contenedor de Nextcloud:
+``` bash
+➜  config docker restart Nextcloud                   
+```
+
 Una vez localizado procedemos a montar el fichero en modo solo lectura en el docker de swag, para que fail2ban pueda leer los intentos de conexión fallidos y proceder a su baneo:
 
 ![fail2ban](fail2ban.png)
