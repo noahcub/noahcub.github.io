@@ -12,7 +12,8 @@ Antes de comenzar con el artículo quiero dar las gracias a la gran comunidad de
   
 Vamos a ello...
   
-## CGNAT y Redirección puertos router
+## CGNAT y Redirección puertos router  
+  
 Es importante no estar en el CG-NAT de la operadora. En mi caso llevo tiempo con IP dinámica pero fuera del CG-NAT.  
 Nuestro servidor nginx trabaja con los puertos 443 y 80. Como esas conexiones van a nuestro router, debemos redireccionar las peticiones que se hagan al puerto 443 y 80 hacia el contenedor de traefik y los puertos que hayamos elegido para que funcione ese contenedor. 
 Después Traefik deriva las peticiones a cada servicio según la configuración. En mi caso, como unraid ya usa estos puertos he cambiado por estos otros, pero se puede poner cualquiera.
@@ -22,7 +23,7 @@ puerto 80 ROUTER ---> puerto xxx0 NAS
 puerto 443 ROUTER ---> puerto xxx3 NAS  
 
 ## Servicio Cloudflare-DDNS
-
+  
 Este contenedor simplemente se encarga periodicamente de actualizar la dirección IP  a la que debe apuntar el dominio midominio.com. 
 
 ![swag-cloudflare](swag-cloudflare.png)
@@ -47,7 +48,7 @@ No DNS update required for XXXXXXXXXXXXXX.com (XXX.XXX.XXX.XXX).
 ```  
 
 ## Crear red personalizada docker
-
+  
 Debemos crear una red en docker a la que puedan conectarse los contenedores que vayan a usar swag. La red se llamará nginx.  
 Nos conectamos por ssh al servidor y creamos la red docker:
 ```bash
@@ -57,7 +58,8 @@ docker network list
 Todos los contenedores creados a partir de ahora se conectarán a la custom network: cloud.
 
 
-## Instalación de Traefik
+## Instalación de Traefik  
+  
 Antes de empezar, tenemos que accedera nuestro panel de cloudflare para crear el API Token que nos hará falta en la configuración del docker de Traefik.  
 Lo preparamos con la configuración que tenemos en la siguiente imagen y después copiamos el token que nos da para añadirlo en el siguiete paso.  
 
@@ -90,41 +92,38 @@ Traefik API (Container Label: traefik.http.routers.api.service): api@internal
 Traefik Entrypoint (Container Label: traefik.http.routers.api.entryPoints): https  
 Enable Traefik (Dashboard) (Container Label: traefik.enable): true  
 
+Con esto el contenedor ya está configurado. Según le damos a aceptar **no arrancará** porque tenemos que crear los ficheros de configuración.   
+  
+Traefik necesita acceder al docker socket para monitorizar las etiquetas de los contenedores. Tenemos dos formas de hacerlo. IBRACORP lo explica muy bien. Vamos a instalar el **contendor dockersocket**. Se deja la configuración por defecto a excepción de la red, que seleccionamos **Custom: cloud**.  
 
-Con esto el contenedor ya está configurado. Según le damos a aceptar **no arrancará** porque tenemos que crear los ficheros de configuración.  
+Arrancamos el contenedor y para que traefik pueda acceder al docker socket por este medio tenemos que añadir una nueva variable:
 
+![traefik-2](traefik-2.png)
+
+También es importante realizar un cambio en el fichero traefik.yml. En el apartado **Docker provider**, debemos añadir el **endpoint: "tcp://dockersocket:2375"** según el recorte que tenemos a continuación:
+  
+``` bash
+# Docker provider for connecting all apps that are inside of the docker network
+  docker:
+    watch: true
+    network: my_custom_cloud    # Add Your Docker Network Name Here
+    # Default host rule to containername.domain.example
+    defaultRule: "Host(`{{ lower (trimPrefix `/` .Name )}}.YOURDOMAIN.COM`)"    # Replace with your domain
+    # swarmModeRefreshSeconds: 15s #comment out or remove this line if using traefik v3
+    exposedByDefault: false
+    endpoint: "tcp://dockersocket:2375" # Uncomment if you are using docker socket proxy
+  
+```
+
+## Ficheros de configuración  
+
+Aunque ya nos hemos adelantado un poco con el fichero de configuración para el docker socket, vamos a ver en profundidad los ficheros necesarios para que funcione traefik.  
+  
 
 ``` bash
 # Instructions: https://github.com/certbot/certbot/blob/master/certbot-dns-clou>
-# Replace with your values
-
-# With global api key:
-dns_cloudflare_email = micorreo@correo.com
-dns_cloudflare_api_key = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-# With token (comment out both lines above and uncomment below):
-# dns_cloudflare_api_token = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+#
 ```
-Como se observa en el fichero se puede realizar el registro por api key o por token. En mi caso está hecho con api key.  
-Reiniciamos el contenedor y debería funcionar correctamente el registro de los certificados.  
-
-![swag-cloudflare-5](swag-cloudflare-5.png)
-![swag-cloudflare-6](swag-cloudflare-6.png)
-![swag-cloudflare-7](swag-cloudflare-7.png)
-![swag-cloudflare-8](swag-cloudflare-8.png)
-
-Si probamos la conexión debería funcionar:
-
-![swag-cloudflare-9.png](swag-cloudflare-9.png)
-
-## Configuración en el panel de control de Cloudflare para los subdominios  
-
-En el apartado DNS -> Registros debe quedar de la siguiente forma:  
-
-![swag-cloudflare-10.png](swag-cloudflare-10.png)
-
-El primer registro se genera solo con el contenedor Cloudflare-DDNS y los otros los añado yo.  
-El subdominio nextcloud es para el acceso a nuestro Nextcloud a través de internet.  
 
 ***   
 Fuentes y enlaces de interés que ayudaran a complementar esta guía:  
