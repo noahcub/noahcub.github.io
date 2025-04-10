@@ -119,6 +119,11 @@ En mi caso, he creado un usuario estandar diferente del administrador para acced
   
 **Es muy importante habilitar 2FA tanto en el usuario estandar como en el adminitrador**.
 
+Como vemos, ya accedemos a nuestro panel de Outline:
+
+![outline-12.png](outline-12.png)
+
+
 ***   
 Fuentes y enlaces de interés que ayudaran a complementar esta guía:  
   
