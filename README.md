@@ -1,4 +1,4 @@
-# Las notas de noah
+# Noah y sus apuntes
 
 Este es mi blog personal con notas sobre linux, software libre y lo que se me ocurra.
 

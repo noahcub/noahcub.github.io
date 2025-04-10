@@ -171,7 +171,7 @@ traefik enable:true
 traefik entrypoints:https  
 traefik rule:Host(`authentik.MIDOMINIO.com`) || HostRegexp(`{subdomain:[A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])?}.MIDOMINIO.com`) && PathPrefix(`/outpost.goauthentik.io/`)   
 
-**Authentik-worker**
+**Authentik-worker**  
 En el caso del worker no hace falta las capturas porque es muy sencilla. Estos son los datos básicos:  
 
 Name: authentik-worker  
