@@ -86,7 +86,7 @@ Vamos a ello. Según el [manual de integración de Authentik con Outline](https:
 
 Pulsamos en Crear Aplicación con proveedor con los datos de la imagen:
 
-![outline-8.png](outline-.png)
+![outline-8.png](outline-8.png)
 
 A la hora de continuar con el proveedor, seleccionamos **OAuth2/OpenID** y rellenamos los datos según la guía de Authentik para Outline:  
 
