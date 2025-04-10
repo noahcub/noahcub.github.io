@@ -122,6 +122,7 @@ networks:
 ```
 
 **Postgresql**    
+```bash
 Name: authentik-postgresql16  
 Network Type: Custom  
 Port: PostgreSQL access port: Nuestro puerto personalizado  
@@ -129,6 +130,7 @@ Path: /var/lib/postgresql/data:/mnt/user/appdata/authentik/postgresql16
 Variable: POSTGRES_PASSWORD (Initial superuser password (required): XXXXXXXXXXXXXXXXXX  
 Variable: POSTGRES_USER (Initial superuser name (default: postgres): USUARIO  
 Variable: POSTGRES_DB (Initial database name (default: postgres): BASE_DATOS  
+```
 
 ![authentik-2.png](authentik-2.png)
 ![authentik-3.png](authentik-3.png)
@@ -154,6 +156,8 @@ Tanto el worker como el server, se instalará a través de las plantillas de IBR
 ![authentik-10.png](authentik-10.png)
 
 Valores importantes en la configuración:  
+
+```bash
 Name: authentik-server  
 Repository:beryju/authentik:latest  
 Network Type: custom  
@@ -167,13 +171,17 @@ PostgreSQL DB Password:pass-basedatos
 APP Key (Container Variable: AUTHENTIK_SECRET_KEY https://passwordsgenerator.net/): xxxxxxxxxxxxxxxxx  
 Redis Password:xxxxxxxxxxxxxxxxxxx  
 Docker Socket:/var/run/docker.sock  
+
+# Etiquetas traefik
 traefik enable:true  
 traefik entrypoints:https  
 traefik rule:Host(`authentik.MIDOMINIO.com`) || HostRegexp(`{subdomain:[A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])?}.MIDOMINIO.com`) && PathPrefix(`/outpost.goauthentik.io/`)   
+```
 
 **Authentik-worker**  
 En el caso del worker no hace falta las capturas porque es muy sencilla. Estos son los datos básicos:  
 
+```bash
 Name: authentik-worker  
 Repository:beryju/authentik:latest  
 Network Type: custom    
@@ -188,7 +196,7 @@ Media: /mnt/user/appdata/authentik/worker/
 Certs: /mnt/user/appdata/authentik/worker/  
 Docker Socket:/var/run/docker.sock  
 Redis Password: XXXXXXXXXXXXXXXXXXXX  
-  
+```
 
 Con esto ya debería estar operativo.  
 

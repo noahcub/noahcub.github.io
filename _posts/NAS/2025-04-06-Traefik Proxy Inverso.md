@@ -77,6 +77,7 @@ En este caso, es importante redireccionar los puertos del router al NAS:
 puerto 80 ROUTER ---> puerto xxx0 NAS  
 puerto 443 ROUTER ---> puerto xxx3 NAS  
 
+```bash
 Network type: Custom: cloud  
 Config folder: /mnt/user/appdata/traefik  
 Docker Socket: /var/run/docker.sock  
@@ -87,10 +88,13 @@ WebUI Port (Container Port: 8080): xxxx3
 URL: midominio.com  
 Cloudflare API Token (Container Variable: CF_DNS_API_TOKEN): XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  
 Ahora vienen las etiquetas del contenedor:  
+
+# Etiquetas traefik
 Traefik Dashboard Subdomain (Container Label: traefik.http.routers.api.rule): Host(`traefik.MIDOMINIO.com`)  
 Traefik API (Container Label: traefik.http.routers.api.service): api@internal  
 Traefik Entrypoint (Container Label: traefik.http.routers.api.entryPoints): https  
 Enable Traefik (Dashboard) (Container Label: traefik.enable): true  
+```
 
 Con esto el contenedor ya está configurado. Según le damos a aceptar **no arrancará** porque tenemos que crear los ficheros de configuración.   
   
