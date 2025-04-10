@@ -55,6 +55,11 @@ Name: outline
 Repository: outlinewiki/outline:latest  
 Network Type: Custom
 Data Path: /mnt/user/appdata/outline/outline
+###
+### Importante la anotación del contenedor de Unraid: 
+### Data Path For it to work chown 1001 /mnt/user/appdata/outline/
+### SI NO EJECUTAMOS ESTE COMANDO PARA CAMBIAR LOS PERMISOS NO ARRANCARÁ NUESTRO CONTENEDOR
+###
 Port HTTP: puerto_acceso
 SECRET_KEY (Container Variable: SECRET_KEY Generate a hex-encoded 32-byte random key. You could use `openssl rand -hex 32`): XXXXXXXXXXXXXXXXXXxx
 UTILS_SECRET(Generate a hex-encoded 32-byte random key. You could use `openssl rand -hex 32`): XXXXXXXXXXXXXXXXXXXxxxxx
