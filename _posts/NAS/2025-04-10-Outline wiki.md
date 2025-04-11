@@ -124,6 +124,36 @@ Como vemos, ya accedemos a nuestro panel de Outline:
 ![outline-12.png](outline-12.png)
 
 
+
+**Backups**  
+Si usamos Outline mucho y necesitamos hacer backups periódicos por si tuvieramos un fallo podemos usar un método similar al que usamos con Immich. [En este enlace](https://frey.today/how-to-backup-immich/) se explica un procedimiento muy sencillo para hacer copias de seguridad de bases de datos postgresql.
+
+```bash
+# BACKUP DE LA BASE DE DATOS
+docker exec -t postgresql17-outline pg_dumpall -c -U USUARIO_BASE_DATOS_OUTLINE | gzip > "/mnt/user/appdata/outline/backup-db/outline_dump.sql.gz"
+```
+Para restaurar el backup seguimos los siguientes pasos:  
+
+1.- Detenemos los tres contenedores: Redis, postgresql17-outline y Outline.  
+  
+2.- Arrrancamos el contenedor de la base de datos postgresql17-outline.  
+
+```bash
+docker start postgresql17-outline # En mi caso lo arranco desde la interfaz web de docker UNRAID
+
+sleep 10    # Wait for Postgres server to start up
+# Esperamos un tiempo pruedencial para que arranque el servidor antes de ejecutar la restauración
+
+# RESTAURAR LA BASE DE DATOS
+gunzip < "/mnt/user/appdata/outline/backup-db/outline_dump.sql.gz" | docker exec -i postgresql17-outline psql -U USUARIO_BASE_DATOS_OUTLINE -d NOMBRE_BASE_DATOS_OUTLINE
+```
+Una vez restaurado la base de datos solo nos queda arrancar los contenedores de Redis y de Outline.  
+  
+Y ya tendremos nuestro Outline tal y como estaba antes del fallo.  
+  
+Ahora hay que establecer una política adecuada de backups. Yo crearé un pequeño script que haga el backup cada 6 u 8 horas en la nube. Lo haremos con el plugin **User Scripts** de Unraid.
+
+
 ***   
 Fuentes y enlaces de interés que ayudaran a complementar esta guía:  
   
