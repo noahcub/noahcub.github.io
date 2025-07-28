@@ -40,6 +40,17 @@ Principales codecs multimedia:
 sudo dnf install gstreamer1-plugins-bad-free-extras gstreamer1-plugin-openh264 gstreamer1-plugins-good-extras mozilla-openh264 gstreamer1-plugins-bad-free-fluidsynth gstreamer1-plugins-bad-free-wildmidi gstreamer1-svt-av1
 sudo dnf install vlc
 ``` 
+***ACTUALIZACIÓN 28/07/2025***
+He tenido problemas de reproducción de videos H.265 del sistema CCTV. Para solucionarlo he tenido que instalar los siguientes paquetes según [este hilo de los foros de Fedora](https://discussion.fedoraproject.org/t/cleanest-way-to-install-all-video-codecs-on-fedora-kde-40/134005/23):  
+Esto creo que no es necesario porque los repositorios rpmfusion ya deberían estar instalados de los pasos anteriores:  
+```bash
+sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+sudo dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+```
+```bash
+sudo dnf install libavcodec-freeworld --allowerasing
+sudo dnf install intel-media-driver --allowerasing
+```
 
 Por defecto Fedora ofrece la versión libre para el códec de vídeo H264, que resulta insuficiente. Con la anterior orden ampliamos el soporte, pero si usamos Firefox debemos efectuar un pequeño cambio: Menú > Complementos y temas > Plugins, y allí activaremos el códec Open H264 de Cisco. Esta información ha sido obtenida de la web [thecheis.com](https://thecheis.com/2023/08/09/puesta-a-punto-intel-nuc-fedora/).  
 
