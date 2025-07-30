@@ -82,16 +82,260 @@ Planificamos la programación tanto de backups como de prune:
 
 ![borg-5.png](borg-5.png)
 
+IMPORTANTE: En los Settings de Vorta debemos marcar **"Automatically start Vorta at login"** para que arranque al inicio.  
+
 Con esto debería funcionar ya nuestro primer backup. Para restaurar es muy sencillo a través de Vorta. Procedemos a montar el backup que nos interese y realizamos la copia a nuestro sistema.  
 
-### Instalación de borgmatic en servidor  
-Aquí empieza el mondongo.  
-Esta parte no ha sido sencilla hasta que di con la configuración adecuada.  
+### Configuración del cliente borgmatic en los servidores (modo consola)  
+
+Esta parte es un poco más compleja porque se hace todo en modo consola, pero una vez configurada resulta todo muy sencillo.  
+La configuración consiste en varios pasos (**Nota: las claves empleadas en este manual son ficticias**):  
+- Instalación de **borgmatic**. Borgmatic nos permite realizar backups con borg a través de un sencillo fichero de configuración.
+- Instalación de **gpg** y **pass** que nos harán falta para encriptar los  backups en destino.
+- Creamos nuestra contraseña gpg para almacenar el password de encriptado de la copia de seguridad.
+- Creamos nueva clave ssh para logearse en nuestro servidor destino de los backups.
+- Configuramos nuestro fichero config.yaml para borgmatic.
+- Creamos nuestra pass para encriptar la copia de seguridad
+- Añadimos una entrada a crontab para programar los backups y las limpiezas.
+
+### Instalación de borgmatic
+
+```bash
+sudo apt install borgmatic
+```
+
+### Instalación de gpg y pass
+
+```bash
+sudo apt install pass gpg
+
+```
+
+## Creación clave gpg
+
+Configuramos nuestra clave gpg:
+```bash
+sudo gpg --full-generate-key
+```
+Tipo de clave: predeterminada
+![borg-client-1.png](borg-client-1.png)  
+![borg-client-2.png](borg-client-2.png)  
+
+Validez: sin caducidad
+![borg-client-3.png](borg-client-3.png)  
+
+Rellenamos nuestros datos personales y de correo:
+![borg-client-4.png](borg-client-4.png)  
+
+Nuestra contraseña para proteger la clave:
+![borg-client-5.png](borg-client-5.png)  
+
+Por último nos muestra un resumen de la clave creada:
+![borg-client-6.png](borg-client-6.png)  
+
+Si queremos ver nuevamente la clave ejecutamos el siguiente comando:
+```bash
+sudo gpg --list-secret-keys --keyid-format LONG
+```
+Nos genera la siguiente salida:
+```bash
+[sudo] password for XXXXXXXXXXXXX: 
+/root/.gnupg/pubring.kbx
+------------------------
+sec   XXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXXX 2025-07-30 [SC]
+      XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+uid                 [ultimate] xxxxxx XXXXXXXXXXXXXXX <XXXXXXXXXXXXXXX@XXXXXXXXXXXXXXX.com>
+ssb   XXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXXX 2025-07-30 [E]
+```
+
+### Creación de claves ssh
+
+```bash
+sudo ssh-keygen -o -a 100 -t ed25519
+```
+Ponemos el nombre de fichero que vamos a usar para almacenar la clave y el resto lo dejamos sin contraseña.
+![borg-client-7.png](borg-client-7.png)  
+
+Una vez tenemos nuestra clave ssh la pasamos al servidor borgserver de Unraid (tenemos varias opciones con scp, ssh-cp-id, o creando el fichero a mano y añadiendo el contenido):
+
+```bash
+# Servidor Unraid
+cd /mnt/user/appdata/borg/sshkeys/clients
+nano my_server.pub
+
+# y pegamos el contenido de la clave ssh.pub
+```
+Posteriormente reiniciamos el servidor borg:
 
 
+```bash
+docker restart borgserver
+###
+docker logs borgserver
+####
+########################################################
+ * Testing Volume BORG_DATA_DIR: /backup
+ * Testing Volume SSH_KEY_DIR: /sshkeys
+ * Checking / Preparing SSH Host-Keys...
+########################################################
+ * Starting SSH-Key import...
+  ** Adding client envy_kde.pub with repo path /backup/envy_kde.pub
+  ** Adding client my_server.pub with repo path /backup/my_server.pub
+```
+En la salida vemos que ya se ha añadido la nueva clave ssh a nuestro servidor borg.  
+
+ ### Configuramos nuestro fichero config.yaml para borgmatic  
+
+Generamos el fichero por defecto para borgmatic
+
+```bash
+sudo generate-borgmatic-config
+# Hacemos una copia por seguridad
+sudo cp /etc/borgmatic/config.yaml /etc/borgmatic/config.yaml.bak
+# Editamos el fichero
+```
+Editamos el fichero: 
+```bash
+sudo nano /etc/borgmatic/config.yaml
+```
+
+Contenido definitivo del fichero de configuración de borgmatic:
+
+```bash
+# /etc/borgmatic/config.yaml
+location:
+  source_directories:
+    - /home/mi_usuario
+  repositories:
+    - ssh://borg@MY_SERVER_IP_TAILSCALE:2222/./mi_nombre_del_repositorio
+  exclude_caches: true
+  exclude_patterns:
+    - '*.pyc'
+    - /home/*/.cache
+storage:
+  compression: auto,zstd
+  encryption_passphrase: pass /super_admin@mi_compañía.com/borg-repokey
+  archive_name_format: "{hostname}-{now}"
+
+  ssh_command: ssh -i /root/.ssh/my_server_ssh_key
+  # Number of times to retry a failing backup
+  # Needs recent Borgmatic version
+  retries: 5
+  retry_wait: 5
+retention:
+  keep_daily: 3
+  keep_weekly: 4
+  keep_monthly: 12
+consistency:
+  checks:
+    - disabled
+    # Uncomment to regularly read all repo data
+    # Needs recent Borgmatic version
+    # - name: repository
+    #   frequency: 4 weeks
+    # - name: archives
+    #   frequency: 8 weeks
+
+  check_last: 3
+```
+Llegado a este punto ya está casi todo hecho, pero debemos prestar atención a esta parte del fichero:
+  
+**encryption_passphrase: pass /super_admin@mi_compañía.com/borg-repokey**
+  
+  
+Tenemos que generar nuestra pass para encritar la copia de seguridad. Vamos a ello.  
+
+### Creamos nuestra pass para encriptar la copia de seguridad
+
+```bash
+sudo pass generate /super_admin@mi_compañía.com/borg-repokey 16
+```
+Nos pedirá la contraseña de nuestro gpg para encriptarla y nos la crea.  
+Para ver lista de contraseñas:
+```bash
+sudo pass list
+```
+
+Si queremos ver la contraseña:
+```bash
+sudo pass list /super_admin@mi_compañía.com/borg-repokey 16
+```
+
+Si queremos editar la contraseña:
+```bash
+sudo pass edit /super_admin@mi_compañía.com/borg-repokey 16
+```
+Y con esto ya está creada y lista para se usada en nuestro fichero config.yaml de borgmatic.  
+
+Verificamos que nuestro fichero config.yaml no contenga errores:
+```bash
+sudo validate-borgmatic-config -c /etc/borgmatic/config.yaml
+```
+
+### Primer backup
+El manejo de borgmatic en modo consola está muy bien explicado en la [web docs.borgbase.com](https://docs.borgbase.com/setup/borg/).  
+```bash
+sudo env "PATH=$PATH" validate-borgmatic-config
+sudo env "PATH=$PATH" borgmatic init --encryption repokey-blake2
+sudo borgmatic create --list --stats
+```
+
+Verificamos que lo ha creado:
+```bash
+sudo borgmatic list
+
+ssh://borg@IP_My_server:2222/./my_repo: Listing archives
+my_server-2025-07-30T04:22:14       Wed, 2025-07-30 04:22:17 [f920bbec8c5f1ff80cfb794b801f1a3d55b3a90a52047f37bf8035e57902fb51]
+```
+
+### Añadimos una entrada a crontab para programar los backups y las limpiezas.  
+
+Vamos a programar nuestros backups y limpiezas a las 08.00 horas todos los días:
+```bash
+sudo crontab -e 
+
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+# m h  dom mon dow   command
+0 8 * * * borgmatic --verbosity -1 --syslog-verbosity 1
+0 8 * * * borgmatic prune --verbosity -1 --syslog-verbosity 1
+```
+
+### Restaurar el backup  
+Esta la segunda parte más importante. He realizado varias pruebas y todo ha funcionado correctamente. Para restaurar el backup primero hacemos un listado de los que tenemos y después montamos el backup en la ubicación deseada para restaurar los ficheros:
+
+Primero listamos los ficheros creados con borgmatic:
+```bash
+sudo borgmatic list
+```
+
+Una vez sabemos el fichero que nos interesa podemos ver el contenido:
+```bash
+sudo borgmatic list --archive server-2020-04-01
+```
+
+Extracción completa de ficheros:
+```bash
+sudo borgmatic extract --archive my_server-2025-07-30T04:24:04 --destination /mnt/new-directory
+```
+
+Extracción de una parte solamente:
+```bash
+sudo borgmatic extract --archive my_server-2020-04-01 --path mnt/catpics --destination /mnt/new-directory
+```
+
+## Ahora me queda configurar un script para añadirlo a cron y realizar los backups al mismo tiempo que me notifique lo que está haciendo por telegram.
 
 
+***   
+Fuentes y enlaces de interés que ayudaran a complementar esta guía:  
 
-***
-Fuentes:  
-[https://hub.docker.com/r/nold360/borgserver](https://hub.docker.com/r/nold360/borgserver)  
+[Borgserver en hub.docker.com](https://hub.docker.com/r/nold360/borgserver)    
+[Guía muy completa, base de casi todo el manual](https://willbrowning.me/automated-offsite-encrypted-backups-with-borg-backup/)  
+[Guía en español con detalle de uso contraseña cifrado](https://es.linux-console.net/?p=9687)  
+[Tutorial bilito para configurar borg en Unraid](https://tutoriales.bilito.eu/automatizar-backups-de-nuestro-unraid-con-borg/)  
+[Guía en español configuración pass y claves gpg para almacenar esas pass](https://es.unixlinux.online/ix/1002011444.html)  
+[Configuración de pass como password-manager en consola](https://linuxconfig.org/how-to-organize-your-passwords-using-pass-password-manager)  
+[Documentación Borgbase.com](https://docs.borgbase.com/)  
+[Github de borgmatic-collective con ejemplos varios](https://github.com/borgmatic-collective/borgmatic/blob/main/docs/how-to/set-up-backups.md)  
+
