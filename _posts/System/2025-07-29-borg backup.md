@@ -399,10 +399,10 @@ sudo crontab -e
 ```
 Con esto, nuestro borgmatica ya debería notificarnos:
 
-Correo:
+Correo:  
 ![borg-client-8.png](borg-client-8.png)
-
-Telegram:
+  
+Telegram:  
 ![borg-client-9.png](borg-client-9.png)
 
 
