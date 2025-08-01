@@ -6,14 +6,15 @@ tags: [terminal, software, linux, vps, fedora]     # TAG names should always be 
 img_path: /assets/pictures/Nas
 author: <noah>
 ---
-## Configuración de Backups con Borg
-
+## Configuración de Backups con Borg  
+  
 Nuestro servidor de Unraid va a servir para guardar los backups de nuestras máquinas. En concreto vamos a guardar los backups de los equipos (portátiles y móviles) a través de Vorta, del VPS y del servidor Debian sanMi.  
 Esta necesidad ha surgido por dos temas distintos:  
 El primero es la necesidad de hacer backup de nuestros servidores secundarios. Podría instalar Duplicacy, que es el sistema que uso para hacer backup de unRaid en la cuenta de GoogleDrive pero visto lo bien que habla todo el mundo de borg vamos a probarlo una temporada.  
 Segundo, los equipos de oficina estaban configurados con Gnome y usando la herramienta Deja-dup hacía los backups. El problema es que Deja-dup no funciona con KDE y me he visto obligado a emplear otra aplicación. Kbackup es una buena opción, pero no acaba de convencerme. Vorta me parece que es una opción excelente así que vamos a ello.  
 
-### Instalación de borgserver
+### Instalación de borgserver  
+  
 Buscamos en aplicaciones Unraid el servidor borg:
 
 ![borg-1.png](borg-1.png)
@@ -48,8 +49,8 @@ Ahora si reiniciamos el contenedor debería arrancar sin problemas
 
 ![borg-2.png](borg-2.png)
 
-### Instalación de Vorta Backup en Fedora
-
+### Instalación de Vorta Backup en Fedora  
+  
 En mi caso he instalado Vorta a través de Discover en formato flatpak.  
 Iniciamos Vorta y comenzamos el procedimiento:  
 
@@ -87,7 +88,7 @@ IMPORTANTE: En los Settings de Vorta debemos marcar **"Automatically start Vorta
 Con esto debería funcionar ya nuestro primer backup. Para restaurar es muy sencillo a través de Vorta. Procedemos a montar el backup que nos interese y realizamos la copia a nuestro sistema.  
 
 ### Configuración del cliente borgmatic en los servidores (modo consola)  
-
+  
 Esta parte es un poco más compleja porque se hace todo en modo consola, pero una vez configurada resulta todo muy sencillo.  
 La configuración consiste en varios pasos (**Nota: las claves empleadas en este manual son ficticias**):  
 - Instalación de **borgmatic**. Borgmatic nos permite realizar backups con borg a través de un sencillo fichero de configuración.
@@ -98,21 +99,21 @@ La configuración consiste en varios pasos (**Nota: las claves empleadas en este
 - Creamos nuestra pass para encriptar la copia de seguridad
 - Añadimos una entrada a crontab para programar los backups y las limpiezas.
 
-### Instalación de borgmatic
-
+### Instalación de borgmatic  
+  
 ```bash
 sudo apt install borgmatic
 ```
 
-### Instalación de gpg y pass
-
+### Instalación de gpg y pass  
+  
 ```bash
 sudo apt install pass gpg
 
 ```
 
-## Creación clave gpg
-
+### Creación clave gpg  
+  
 Configuramos nuestra clave gpg:
 ```bash
 sudo gpg --full-generate-key
@@ -148,8 +149,8 @@ uid                 [ultimate] xxxxxx XXXXXXXXXXXXXXX <XXXXXXXXXXXXXXX@XXXXXXXXX
 ssb   XXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXXX 2025-07-30 [E]
 ```
 
-### Creación de claves ssh
-
+### Creación de claves ssh  
+  
 ```bash
 sudo ssh-keygen -o -a 100 -t ed25519
 ```
@@ -184,8 +185,8 @@ docker logs borgserver
 ```
 En la salida vemos que ya se ha añadido la nueva clave ssh a nuestro servidor borg.  
 
- ### Configuramos nuestro fichero config.yaml para borgmatic  
-
+### Configuramos nuestro fichero config.yaml para borgmatic  
+  
 Generamos el fichero por defecto para borgmatic
 
 ```bash
@@ -245,8 +246,8 @@ Llegado a este punto ya está casi todo hecho, pero debemos prestar atención a 
   
 Tenemos que generar nuestra pass para encritar la copia de seguridad. Vamos a ello.  
 
-### Creamos nuestra pass para encriptar la copia de seguridad
-
+### Creamos nuestra pass para encriptar la copia de seguridad  
+  
 ```bash
 sudo pass generate /super_admin@mi_compañía.com/borg-repokey 16
 ```
@@ -272,7 +273,8 @@ Verificamos que nuestro fichero config.yaml no contenga errores:
 sudo validate-borgmatic-config -c /etc/borgmatic/config.yaml
 ```
 
-### Primer backup
+### Primer backup  
+  
 El manejo de borgmatic en modo consola está muy bien explicado en la [web docs.borgbase.com](https://docs.borgbase.com/setup/borg/).  
 ```bash
 sudo env "PATH=$PATH" validate-borgmatic-config
@@ -289,7 +291,7 @@ my_server-2025-07-30T04:22:14       Wed, 2025-07-30 04:22:17 [f920bbec8c5f1ff80c
 ```
 
 ### Añadimos una entrada a crontab para programar los backups y las limpiezas.  
-
+  
 Vamos a programar nuestros backups y limpiezas a las 08.00 horas todos los días:
 ```bash
 sudo crontab -e 
@@ -307,8 +309,10 @@ If you omit create and other actions, borgmatic runs through a set of default ac
 sudo borgmatic --verbosity 1 --list --stats
 ```
 En resumen, cuando no añadimos otras opciones a borgmatica, éste ejecuta de forma automática por defecto las siguientes operaciones: **Prune, Compact, Backups y Check de backup**, lo que me parece ideal para añadir el comando en cron.
-
+  
+  
 ### Restaurar el backup  
+  
 Esta la segunda parte más importante. He realizado varias pruebas y todo ha funcionado correctamente. Para restaurar el backup primero hacemos un listado de los que tenemos y después montamos el backup en la ubicación deseada para restaurar los ficheros:
 
 Primero listamos los ficheros creados con borgmatic:
@@ -332,7 +336,7 @@ sudo borgmatic extract --archive my_server-2020-04-01 --path mnt/catpics --desti
 ```
 
 ### Notificaciones del Backup usando apprise  
-
+  
 Instalamos el software necesario. Según su [github](https://github.com/caronc/apprise) Apprise permite enviar una notificación a casi todos los servicios de notificación más populares disponibles en la actualidad, como: Telegram, Discord, Slack, Amazon SNS, Gotify, etc.   
 
 Instalación es sencilla:
