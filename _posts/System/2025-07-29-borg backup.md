@@ -297,9 +297,16 @@ sudo crontab -e
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-0 8 * * * borgmatic --verbosity -1 --syslog-verbosity 1
-0 8 * * * borgmatic prune --verbosity -1 --syslog-verbosity 1
+0 8 * * * /usr/bin/borgmatic --stats -v 0 2>&1
 ```
+**INFORMACIÓN IMPORTANTE SOBRE EL COMANDO BORGMATIC**  
+En el [repositorio de github borgmatic-collective](https://github.com/borgmatic-collective/borgmatic/blob/main/docs/how-to/set-up-backups.md) nos dice lo siguiente:  
+If you omit create and other actions, borgmatic runs through a set of default actions: prune any old backups as per the configured retention policy, compact segments to free up space (with Borg 1.2+, borgmatic 1.5.23+), create a backup, and check backups for consistency problems due to things like file damage. For instance:
+
+```bash
+sudo borgmatic --verbosity 1 --list --stats
+```
+En resumen, cuando no añadimos otras opciones a borgmatica, éste ejecuta de forma automática por defecto las siguientes operaciones: **Prune, Compact, Backups y Check de backup**, lo que me parece ideal para añadir el comando en cron.
 
 ### Restaurar el backup  
 Esta la segunda parte más importante. He realizado varias pruebas y todo ha funcionado correctamente. Para restaurar el backup primero hacemos un listado de los que tenemos y después montamos el backup en la ubicación deseada para restaurar los ficheros:
@@ -324,7 +331,84 @@ Extracción de una parte solamente:
 sudo borgmatic extract --archive my_server-2020-04-01 --path mnt/catpics --destination /mnt/new-directory
 ```
 
-## Ahora me queda configurar un script para añadirlo a cron y realizar los backups al mismo tiempo que me notifique lo que está haciendo por telegram.
+### Notificaciones del Backup usando apprise  
+
+Instalamos el software necesario. Según su [github](https://github.com/caronc/apprise) Apprise permite enviar una notificación a casi todos los servicios de notificación más populares disponibles en la actualidad, como: Telegram, Discord, Slack, Amazon SNS, Gotify, etc.   
+
+Instalación es sencilla:
+```bash
+sudo apt install apprise
+```
+
+Configuración de nuestro fichero borgmatic conf:
+```bash
+sudo nano /etc/borgmatic/config.yaml
+
+#### AÑADIMOS ESTO AL FINAL de nuestro fichero de configuración
+hooks:
+  before_backup:
+    - echo "Starting a backup job."
+
+  after_backup:
+    - echo "Backup created."
+    - apprise -vv -t "✅ SUCCESS Backup My_Server" -b "$(cat /tmp/backup_run.log)" "mailtos://smtp.gmail.com:587?user=super_admin@gmail.com&pass=superpasssecreta&from=superadmin@gmail.com&to=superadmin@hotmail.com,tgram://bot_token:de_telegram/chat_id_telegram/"
+
+  on_error:
+    - echo "Error while creating a backup."
+    - apprise -vv -t "❌ FAILED Backup My_Server" -b "$(cat /tmp/backup_run.log)" "mailtos://smtp.gmail.com:587?user=super_admin@gmail.com&pass=superpasssecreta&from=superadmin@gmail.com&to=superadmin@hotmail.com,tgram://bot_token:de_telegram/chat_id_telegram/"
+```
+
+En mi caso he configurado para que nos envíe dos notificaciones. La primera por correo electrónico y la segunda a Telegram.  
+   
+En la versión de borgmatic 1.8.4+ Apprise se integra de forma nativa con borgmatic, lo que permite una configuración mucho más limpia, tal y como se muestra en la siguiente ejemplo. Esta configuración yo no puedo usarla porque mi sistema tiene la versión borgmatic 1.7.7:
+```bash
+apprise:
+    states:
+        - start
+        - finish
+        - fail
+
+    services:
+        - url: mailtos://smtp.example.com:587?user=server@example.com&pass=YourSecurePassword&from=server@example.com&to=receiver@example.com
+          label: mail
+        - url: slack://token@Txxxx/Bxxxx/Cxxxx
+          label: slack
+
+    start:
+        title: ⚙️ Started
+        body: Starting backup process.
+
+    finish:
+        title: ✅ SUCCESS
+        body: Backups successfully made.
+
+    fail:
+        title: ❌ FAILED
+        body: Your backups have failed.
+```
+En la versión 1.8.9+, los logs de borgmatic son añadidos automaticamenta al cuerpo de las notificaciones de apprise. Me parece una colaboración impresionante. **Que ganas tengo de que actualice Debian a la nueva versión de borgmatic**.   
+  
+Por último, modificamos nuestro crontab para que al ejecutarse guarde la salida de las estadísticas en el fichero **/tmp/backup_run.log**. 
+```bash
+sudo crontab -e
+
+#
+#
+#
+30 8 * * * /usr/bin/borgmatic --stats -v 0 > /tmp/backup_run.log
+```
+Con esto, nuestro borgmatica ya debería notificarnos:
+
+Correo:
+![borg-client-8.png](borg-client-8.png)
+
+Telegram:
+![borg-client-9.png](borg-client-9.png)
+
+
+
+
+
 
 
 ***   
@@ -338,4 +422,8 @@ Fuentes y enlaces de interés que ayudaran a complementar esta guía:
 [Configuración de pass como password-manager en consola](https://linuxconfig.org/how-to-organize-your-passwords-using-pass-password-manager)  
 [Documentación Borgbase.com](https://docs.borgbase.com/)  
 [Github de borgmatic-collective con ejemplos varios](https://github.com/borgmatic-collective/borgmatic/blob/main/docs/how-to/set-up-backups.md)  
+[Notificaciones con apprise](https://github.com/caronc/apprise)  
+[Github de borgmatic-collective notificaciones apprise](https://github.com/borgmatic-collective/docker-borgmatic)  
+[Doc notificaciones apprise Telegram](https://github.com/caronc/apprise/wiki/Notify_telegram)  
+
 
