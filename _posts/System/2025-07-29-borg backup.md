@@ -492,7 +492,7 @@ sudo gpg --import private.key # Aquí nos pedirá nuevamente nuestra contraseña
 git clone <url> ~/.password-store/
 
 # En mi caso:
-git clone git@github-root:super_admin/keys-borg-nerdserver.git
+git clone git@github-root:super_admin/pass-keys-sanmi.git
 ```
 Con esto ya deberíamos tener nuestras claves preparadas.  
   
