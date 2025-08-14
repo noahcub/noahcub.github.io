@@ -98,8 +98,6 @@ La configuración consiste en varios pasos (**Nota: las claves empleadas en este
 - Configuramos nuestro fichero config.yaml para borgmatic.
 - Creamos nuestra pass para encriptar la copia de seguridad
 - Añadimos una entrada a crontab para programar los backups y las limpiezas.
-- Notificaciones del sistema
-- Backups de las claves gpg y pass
 
 ### Instalación de borgmatic  
   
@@ -411,92 +409,77 @@ Correo:
 Telegram:  
 ![borg-client-9.png](borg-client-9.png)
 
+### Notas finales a tener en cuenta  
 
-### Backup de las claves gpg y pass
-
-Si hay un fallo de los discos que tengamos que hacer una instalación limpia, está claro que tenemos un backup en borg. Este backup está protegido por la contraseña creada con pass. A su vez para abir la contraseña creada con pass necesitamos nuestras claves gpg.  
+En mi servidor sanmi tengo instalado [Fedora Server](https://fedoraproject.org/es/server/download). En este caso, la versión de borgmatic que nos acompaña es la versión 2.0.6 por lo que ya disponemos de las nuevas características para notificaciones y de un nuevo formato en el fichero config.yaml.  
   
-Vamos a hacer un backup de todo esto. Empezamos exportando nuestras claves gpg
+Respecto a la configuración de **encryption_passcommand** en borgmatic, se me presenta un problema.  
+Si programamos el backup con cron, no se ejecuta. El motivo es que cada vez que se va a ejecutar, el comando **pass** nos solicita nuestra contraseña de la clave gpg y si no la introducimos el resto no continúa. Entonces, para que los backups se realicen de forma automática sin intervención del usuario, la única forma que he conseguido hacerlo es poniendo la contraseña directamente en el fichero config.yaml.  
+
+Configuración de mi fichero **config.yaml** en Fedora Server:
 
 ```bash
-gpg --export-secret-keys $ID > my-private-key.asc
-### En mi caso: 
+source_directories:
+  - /home/AppData
+  - /home/super_admin
 
-sudo gpg --export -a super_admin@hotmail.com > ./gpg-keys/public.key
-sudo gpg --export-secret-key -a super_admin@hotmail.com > ./gpg-keys/private.key
-# Al exportar nuestra clave privada nos pedirá el password que habíamos puesto al crearla
+repositories:
+  - path: ssh://borg@100.100.100.100:2222/./sanMi
+    label: sanMi
+
+exclude_caches: true
+exclude_patterns:
+  - '*.pyc'
+  - /home/*/.cache
+
+compression: auto,zstd
+encryption_passphrase: My_super_password
+#encryption_passcommand: pass /super_admin@gmail.com/borg-repokey
+archive_name_format: "{hostname}-{now}"
+
+ssh_command: ssh -i /root/.ssh/sanmi
+retries: 5
+retry_wait: 5
+
+keep_daily: 3
+keep_weekly: 4
+keep_monthly: 12
+
+checks:
+  - name: repository
+    frequency: 4 weeks
+  - name: archives
+    frequency: 8 weeks
+
+check_last: 3
+
+apprise:
+  states:
+    - start
+    - finish
+    - fail
+
+  services:
+    - url: mailtos://smtp.gmail.com:587?user=super_admin_@gmail.com&pass=super_password&from=super_admin@gmail.com&to=destino@hotmail.com
+      label: mail
+    - url: tgram://123456789:AAE39Q5XXXXXXXXXXXXXXX_XXXXXXXXXXXXXXXXXXXxPGrI/XXXXXXXXXXXX/
+      label: telegram
+
+  start:
+    title: ⚙️ Starrted Backup
+    body: Starting backup process
+
+  finish:
+    title: ✅ SUCCESS Backup SanMi
+    body: Backup SanMi success
+
+  fail:
+    title: ❌ FAILED Backup SanMi
+    body: Backups SanMi failed
+
 ```
 
-Las guardamos en un lugar seguro. En mi caso las he guardado en un pendrive que apenas uso.
 
-Ahora vamos a hacer la copia de seguridad de nuestras claves **pass**. En este caso vamos a usar como almacenamiento github. Pass tiene integrado el servicio de github y resulta muy sencillo crear un **repositorio privado** para dejar almacenadas nuestras claves y cuando creamos alguna nueva hacemos un simple git push para actualizarlo.  
-Como para hacer los backups con borg hemos usado el usuario **root** tenemos las claves almacenanas en su carpeta.  Añadimos la clave ssh de root a github.
-
-![borg-client-10.png](borg-client-10.png)
-
-Por motivos que desconozco cuando intentaba usar esa clave en github para añadir datos al repositorio siempre me daba acceso denegado git. Buscando en intenet, encontré [el blog de Baeldung Linux](https://www.baeldung.com/linux/ssh-private-key-git-command) que decía que podía especificar la clave ssh que quería usar en github.  
-Haciendo eso funcionó sin problemas:
-
-```bash
-nano /root/.ssh/config 
-### y añadimos lo siguiente:
-Host github-root
-    HostName github.com
-    IdentityFile /root/.ssh/my_server_key # key que queremos usar con github
-    User git
-    IdentitiesOnly yes
-
-### Ahora si probamos la conexión debería funcionar:
-ssh -T git@github-root
-Hi super_admin! You've successfully authenticated, but GitHub does not provide shell access.
-```
-Ya podemos crear el nuevo repositorio en github y proceder a subir los datos.
-
-![borg-client-11.png](borg-client-11.png)
-
-Github nos saca esta configuración: 
-
-```bash
-echo "# pass-keys-sanmi" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin git@github.com:super_admin/pass-keys-sanmi.git
-git push -u origin main
-```
-Pues tenemos que adaptarla a nuestras necesidades [según este hilo que encontré](https://superuser.com/questions/1722240/how-to-backup-passwords-from-pass#1722309):
-```bash
-cd /root/.password-store/
-pass git init
-### ahora es importante modificar la url que nos da git para decirle que queremos usar nuestra clave ssh
-pass git remote add origin git@github-root:super_admin/pass-keys-sanmi.git
-# usando git en condiciones normales tendriamos que hacer un git add y un git commit, pero pass lo hace todo por nosotros al iniciar el repositorio.
-pass git push -u origin master
-```
-Con esto ya tenemos en nuestro repositorio privado de git las contraseñas de pass.  
-  
-### Restore de las claves gpg y pass  
-  
-El proceso es muy sencillo
-
-```bash
-# Claves gpp
-gpg --import my-private-key.asc
-
-# En mi caso:
-sudo gpg --import public.key
-sudo gpg --import private.key # Aquí nos pedirá nuevamente nuestra contraseña
-
-# Claves de pass
-git clone <url> ~/.password-store/
-
-# En mi caso:
-git clone git@github-root:super_admin/keys-borg-nerdserver.git
-```
-Con esto ya deberíamos tener nuestras claves preparadas.  
-  
-Ahora tocaría instalar borg, configurar nuestro fichero config.yml y recuperar el backup.
 
 
 ***   
@@ -513,7 +496,5 @@ Fuentes y enlaces de interés que ayudaran a complementar esta guía:
 [Notificaciones con apprise](https://github.com/caronc/apprise)  
 [Github de borgmatic-collective notificaciones apprise](https://github.com/borgmatic-collective/docker-borgmatic)  
 [Doc notificaciones apprise Telegram](https://github.com/caronc/apprise/wiki/Notify_telegram)  
-[Guardar en github nuestras claves pass](https://superuser.com/questions/1722240/how-to-backup-passwords-from-pass#1722309)  
-[Usar clave ssh específica para github](https://www.baeldung.com/linux/ssh-private-key-git-command)  
 
 
