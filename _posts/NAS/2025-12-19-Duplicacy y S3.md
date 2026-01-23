@@ -1,7 +1,7 @@
 ---
 title: Backups con Duplicacy y S3
 description: Backups con Duplicacy y S3
-date: 2025-12-19 13:40:36+02:00
+date: 2025-12-19 13:40:36 +01:00
 categories: [Nas]
 tags: [software, config, unraid]     # TAG names should always be lowercase
 img_path: /assets/pictures/Nas
