@@ -11,7 +11,8 @@ author: <noah>
 ## Traefik y crowdsec
   
 Hasta hace poco tenía en funcionamiento traefik con crowdsec usando las plantillas de unraid. Hice varios manuales sobre la instalación pero por motivos que desconozco crowdsec no parseaba las líneas de logs de traefik y por tanto no hacía absolutamente nada.  
-He decicido hacer una instalación limpia desde 0 y aquí va.
+He decicido hacer una instalación limpia desde 0 y aquí va.  
+Gran parte de este manual se ha hecho usando [Perplexity](https://www.perplexity.ai/). Debo decir que tiene mucho que mejorar, pero nos marca unas bases buenas para empezar.
 
 ### Preparación del entorno
 Lo primero que vamos a hacer es preparar nuestro entorno de directorios:  
@@ -419,6 +420,8 @@ docker exec -it crowdsec cscli decisions list
 docker exec -it crowdsec cscli metrics
 # Unban IP
 docker exec -it crowdsec cscli decisions delete -i x.x.x.x
+# Banear una IP
+docker exec -it crowdsec cscli decisions add --ip xx.xx.xx.xx --duration 1h
 ```
 ### Protección de servicios con crowdsec  
 Para proteger servicios tenemos dos opciones:  
@@ -435,10 +438,7 @@ traefik.http.routers.nextcloud.middlewares=security-headers@file,crowdsec-bounce
 ***   
 Fuentes y enlaces de interés que ayudaran a complementar esta guía:  
 
-[Que es S3 y por qué lo necesitas](https://atareao.es/podcast/que-es-s3-y-por-que-lo-necesitas-para-selfhosting/)    
-[RustFS](https://rustfs.dev/)  
-[Blog Rustfs](https://rustfs.dev/migrating-from-minio-to-rustfs-a-technical-guide/)  
-[Minio S3](https://www.min.io/)  
-[Duplicacy](https://duplicacy.com/)  
-[Duplicati](https://duplicati.com/)  
+[Traefik](https://doc.traefik.io/traefik/getting-started/quick-start/)    
+[Crowdsec](https://docs.crowdsec.net/docs/appsec/quickstart/traefik/)  
+
 
