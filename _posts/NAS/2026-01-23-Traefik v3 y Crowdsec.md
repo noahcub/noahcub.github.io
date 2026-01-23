@@ -487,6 +487,66 @@ docker exec crowdsec cscli metrics  # Verifica parsing
 ```
 ![crowdsec-nextcloud.png](crowdsec-nextcloud.png)
 
+Con esta configuración Nextcloud registraba la dirección IP de Cloudflare, no la IP real del usuario que accede a Nextcloud. Vamos a arreglarlo.  
+Problema clásico Cloudflare + Traefik + Nextcloud: Nextcloud ve IP de Cloudflare porque no confía en Traefik como proxy ni lee el header CF-Connecting-IP (IP real que pasa Cloudflare).  
+
+Editamos nuestro fichero config.php de Nextcloud:
+
+```bash
+  [.......]
+  'dbtype' => 'mysql',
+  'version' => '32.0.5.0',
+  'trusted_proxies' => 
+  array (
+    0 => '192.168.10.55',
+// añadida rango IP de nuestra red "cloud" de docker:
+    1 => '172.21.0.0/16',
+// añadidas IPs de clouflare para que Nextcloud confíe en ellas:
+    2 => '103.21.244.0/22',
+    3 => '103.22.200.0/22',
+    4 => '103.31.4.0/22',
+    5 => '104.16.0.0/13',
+    6 => '104.24.0.0/14',
+    7 => '108.162.192.0/18',
+    8 => '131.0.72.0/22',
+    9 => '141.101.64.0/18',
+    10 => '162.158.0.0/15',
+    11 => '172.64.0.0/13',
+    12 => '173.245.48.0/20',
+    13 => '188.114.96.0/20',
+    14 => '190.93.240.0/20',
+    15 => '197.234.240.0/22',
+    16 => '198.41.128.0/17',
+  ),
+// añadida según info de perplexity para que crowdsec funcione bien.
+  'forwarded_for_headers' => 
+  array (
+    'HTTP_CF_CONNECTING_IP',    // ← IP real de Cloudflare
+    'HTTP_X_FORWARDED_FOR',
+    'HTTP_X_FORWARDED',
+    'HTTP_X_CLUSTER_CLIENT_IP',
+    'HTTP_FORWARDED_FOR',
+    'HTTP_FORWARDED',
+    'REMOTE_ADDR',
+  ),
+  'overwrite.cli.url' => 'https://nextcloud.mi_dominio.com',
+  'overwritehost' => 'nextcloud.mi_dominio.com',
+  [......]
+```
+Y añadimos las siguientes etiquetas al docker-compose de Nextcloud:  
+```bash 
+# Esta primera la editamos como sigue:
+traefik.http.routers.nextcloud.middlewares=crowdsec-bouncer@file,security-headers@file,nextcloud-headers@docker
+# Estas se añaden nuevas:
+traefik.http.middlewares.nextcloud-headers.headers.customrequestheaders.X-Forwarded-Proto=https
+traefik.http.middlewares.nextcloud-headers.headers.customrequestheaders.X-Forwarded-For=true
+traefik.http.middlewares.nextcloud-headers.headers.customrequestheaders.X-Forwarded-Port=443
+traefik.http.middlewares.nextcloud-headers.headers.customrequestheaders.X-Real-IP={{.ClientIP }}
+```
+
+Y con esto nuestro Nextcloud ya detecta la IP verdadera para, si procede, banearla.
+
+
 ***   
 Fuentes y enlaces de interés que ayudaran a complementar esta guía:  
 
