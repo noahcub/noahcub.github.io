@@ -435,6 +435,58 @@ Etiqueta:
 traefik.http.routers.nextcloud.middlewares=security-headers@file,crowdsec-bouncer@file
 ```
 
+### Protección de Nextcloud  
+Crowdsec tiene una colección específica para Nextcloud. Vamos a proteger nuestra instancia.  
+Modificamos el docker-compose añadiendo la colección de crowdsecurity/nextcloud y montando la carpeta donde almacenamos los logs de Nextcloud.
+
+```bash
+  crowdsec:
+    image: crowdsecurity/crowdsec
+    container_name: crowdsec
+    restart: unless-stopped
+    environment:
+      - COLLECTIONS=crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/nextcloud
+    volumes:
+      - /mnt/user/appdata/traefik/log:/var/log/traefik:ro   # comparte los logs
+      - /mnt/user/appdata/nextcloud/config/nextcloud-logs:/var/log/nextcloud:ro   # comparte los logs
+```  
+Reiniciamos crowdsec y podemos actualizar las colletions:
+```bash
+docker exec -it crowdsec cscli hub update
+```
+
+Revisamos nuestro config.php de Nextcloud para verificar que los logs se guardan en el lugar correcto:
+```bash
+  'mail_smtpport' => '465',
+  'bulkupload.enabled' => false,
+  'loglevel' => 2,
+  'logfile' => '/var/www/html/config/nextcloud-logs/nextcloud.log',
+  'log_rotate_size = 0',
+```
+Modificamos nuestro fichero acquis.yaml de crowdsec, quedano así:
+```bash
+# Logs de Traefik (para todo lo que pasa por el proxy)
+---
+filenames:
+  - /var/log/traefik/access.log
+poll_without_inotify: true
+labels:
+  type: traefik
+
+# Logs de Nextcloud (brute-force y eventos específicos NC)
+---
+filenames:
+  - /var/log/nextcloud/nextcloud.log
+labels:
+  type: nextcloud
+```
+Reiniciamos y verificamos si se están parseando los dos ficheros de logs que tenemos:
+```bash
+docker restart crowdsec
+docker exec crowdsec cscli metrics  # Verifica parsing
+```
+![crowdsec-nextcloud.png](crowdsec-nextcloud.png)
+
 ***   
 Fuentes y enlaces de interés que ayudaran a complementar esta guía:  
 
