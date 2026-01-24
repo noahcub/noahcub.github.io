@@ -423,7 +423,39 @@ docker exec -it crowdsec cscli decisions delete -i x.x.x.x
 # Banear una IP
 docker exec -it crowdsec cscli decisions add --ip xx.xx.xx.xx --duration 1h
 ```
+  
+### Enrutar servicios a través de traefik  
+
+Las etiquetas básicas que debe llevar cualquier servicio para que traefik lo enrute son las siguientes:
+
+```bash
+# Ejemplo para nuestro karakeep  
+traefik.enable=true
+traefik.http.routers.karakeep.rule=Host(`karakeep.mi_dominio.com`)
+traefik.http.routers.karakeep.entrypoints=websecure
+traefik.http.routers.karakeep.tls.certresolver=cloudflare
+traefik.http.services.karakeep.loadbalancer.server.port=3000
+# middelware que vamos a aplicar a este servcio
+traefik.http.routers.karakeep.middlewares=crowdsec-bouncer@file,security-headers@file
+```
+
+IMPORTANTE: La etiqueta **traefik.http.services.karakeep.loadbalancer.server.port** debe indicar el puerto interno del contenedor, ya que tenemos que recordar que nuestros **servicios siempre deben estar en la misma red que traefik** para que funcionen.  
+En mi caso, el docker-compose de karakeep lleva la siguiente configuración de puertos porque el puerto 3000 lo estoy usando para otro servicio:
+```bash
+    [....]
+    ports:
+      - 3333:3000
+    [....]
+```
+Entonces, el acceso a karakeep a través de la red local es:  
+http://192.168.10.55:3333  
+
+Pero traefik sólo entiende de la red docker, por lo que el **puerto para traefik es 3000**.
+
+
 ### Protección de servicios con crowdsec  
+Hemos configurado crowdsec como un middleware, por tanto, la solicitud de conexión al servicio debe pasar antes por crowdsec que dirá si permite esa conexión o no.  
+
 Para proteger servicios tenemos dos opciones:  
 1.- Configuración estática en dynamic_conf.yml  
 2.- Etiquetas traefik en el servicio en cuestión.  
@@ -432,7 +464,7 @@ Por facilidad vamos a hacer la segunda opción, a través de etiquetas, así man
 Etiqueta:
 ```bash
 # Ejemplo para Nextcloud. El resto de servicios sería exactamente igual
-traefik.http.routers.nextcloud.middlewares=security-headers@file,crowdsec-bouncer@file
+traefik.http.routers.nextcloud.middlewares=rowdsec-bouncer@file,security-headers@file
 ```
 
 ### Protección de Nextcloud  
