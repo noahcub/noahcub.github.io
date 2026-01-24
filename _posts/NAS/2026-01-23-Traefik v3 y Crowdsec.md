@@ -578,6 +578,78 @@ traefik.http.middlewares.nextcloud-headers.headers.customrequestheaders.X-Real-I
 
 Y con esto nuestro Nextcloud ya detecta la IP verdadera para, si procede, banearla.
 
+### Conexión de nuestro contenedor a Crowdsec.net  
+Accedemos a nuestra cuenta en [https://app.crowdsec.net/](https://app.crowdsec.net/).  
+
+En el dashboard → Security Engines → Add Instance (o "Engines")  
+
+Copia el Enrollment Token que genera (algo como cscli console enroll abc123...def456)  
+
+```bash
+# Registrar con el token
+docker exec -it crowdsec cscli console enroll TU_ENROLLMENT_TOKEN_AQUI
+```
+Esto creará /etc/crowdsec/online_api_credentials.yaml con login y password válidos.  
+Reiniciamos nuestro contenedor:
+```bash
+docker restart crowdsec
+docker logs crowdsec | grep -i capi
+```
+Volvemos al dashboard de crowdsec.net y aceptamos el enrolado del equipo. Podemos cambiar el nombre para ser más visual al acceder. En mi caso le puse Unraid.  
+Ventajas de conectar a Console:  
+1.- Dashboard web con alertas en tiempo real  
+2.- Blocklist comunitaria (millones de IPs malas)  
+3.- Métricas globales y threat intel  
+
+
+
+### Notificaciones en Telegram de Crowdsec  
+
+Para añadir notificaciones realizamos la siguiente configuración:   
+
+**IMPORTANTE: DETENEMOS EL COMPOSE**  
+
+Fichero **/mnt/user/appdata/crowdsec/config/notifications/http.yaml**
+```bash                           
+type: http                # No cambiar
+name: telegram      # Nombre que usaremos en el perfil
+log_level: info
+
+# URL de la API de Telegram con tu TOKEN
+# Mucho OJO en la url - Está bien escrita
+
+url: https://api.telegram.org/botXXXXXXXXXXXX:XXXXXXXXXXXXXXXXXXXXXX_XXXXXXXXXXXXXXXX/sendMessage
+
+method: POST
+headers:
+  Content-Type: application/json
+
+# Formato del mensaje (JSON)
+# Formato del mensaje (JSON)
+format: |
+  {
+    "chat_id": "-5002897396",
+    "text": "{{range .}}{{$alert := .}}{{range .Decisions}}IP {{.Value}} baneada {{.Duration}} por {{.Scenario}}{{end}}{{end}}",
+    "parse_mode": "HTML"
+  }
+```
+Fichero **/mnt/user/appdata/crowdsec/config/profiles.yaml**
+```bash
+name: default_ip_remediation
+#debug: true
+filters:
+ - Alert.Remediation == true && Alert.GetScope() == "Ip"
+decisions:
+ - type: ban
+   duration: 4h
+notifications:
+ - telegram
+```
+
+Probamos a enviar una notificación de prueba:
+```bash
+docker exec -it crowdsec cscli notifications test telegram
+```
 
 ***   
 Fuentes y enlaces de interés que ayudaran a complementar esta guía:  
