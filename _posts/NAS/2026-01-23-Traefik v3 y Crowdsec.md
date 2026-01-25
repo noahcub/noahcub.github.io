@@ -600,7 +600,8 @@ Ventajas de conectar a Console:
 1.- Dashboard web con alertas en tiempo real  
 2.- Blocklist comunitaria (millones de IPs malas)  
 3.- Métricas globales y threat intel  
-
+  
+**En mi caso, al final no hice el enrolado del equipo por los siguientes motivos:  
 
 
 ### Notificaciones en Telegram de Crowdsec  
@@ -649,6 +650,54 @@ notifications:
 Probamos a enviar una notificación de prueba:
 ```bash
 docker exec -it crowdsec cscli notifications test telegram
+```
+Versión tuneada de notificaciones en Telegram. Tomando como ejemplo el modelo de [la documentación de crowdsec.net](https://docs.crowdsec.net/docs/local_api/notification_plugins/telegram):
+
+```bash
+type: http          # Don't change
+name: telegram      # Must match the registered plugin in the profile
+
+# One of "trace", "debug", "info", "warn", "error", "off"
+log_level: info
+
+format: |
+  {
+   "chat_id": "-5002897396", 
+   "text": "
+     {{range . -}}  
+     {{$alert := . -}}  
+     {{range .Decisions -}}
+     🚨 CrowdSec Alert on MyServer! 🚨
+  🆔 IP: {{.Value}}
+  ⚠️  Scenario: {{ .Scenario }}
+  🚧 Decision: will get {{.Type}} for next {{.Duration}}
+     {{end -}}
+     {{end -}}
+   ",
+   "reply_markup": {
+      "inline_keyboard": [
+          {{ $arrLength := len . -}}
+          {{ range $i, $value := . -}}
+          {{ $V := $value.Source.Value -}}
+          [
+              {
+                  "text": "See {{ $V }} on shodan.io",
+                  "url": "https://www.shodan.io/host/{{ $V -}}"
+              },
+              {
+                  "text": "See {{ $V }} on crowdsec.net",
+                  "url": "https://app.crowdsec.net/cti/{{ $V -}}"
+              }
+          ]{{if lt $i ( sub $arrLength 1) }},{{end }}
+      {{end -}}
+      ]
+  }
+
+url: https://api.telegram.org/botXXXXXXXXXXX:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/sendMessage
+
+method: POST
+headers:
+  Content-Type: "application/json"
 ```
 
 ***   
