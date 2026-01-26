@@ -668,9 +668,9 @@ format: |
      {{$alert := . -}}  
      {{range .Decisions -}}
      🚨 CrowdSec Alert on MyServer! 🚨
-  🆔 IP: \{{.Value}}
-  ⚠️  Scenario: \{{ .Scenario }}
-  🚧 Decision:  \{{.Type}} for next {{.Duration}}
+  🆔 IP: {{.Value}}
+  ⚠️  Scenario: {{ .Scenario }}
+  🚧 Decision:  {{.Type}} for next {{.Duration}}
      {{end -}}
      {{end -}}
    ",
