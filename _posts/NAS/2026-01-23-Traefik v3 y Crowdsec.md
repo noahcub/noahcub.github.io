@@ -653,7 +653,7 @@ docker exec -it crowdsec cscli notifications test telegram
 ```
 Versión tuneada de notificaciones en Telegram. Tomando como ejemplo el modelo de [la documentación de crowdsec.net](https://docs.crowdsec.net/docs/local_api/notification_plugins/telegram):
 
-```bash
+```console
 type: http          # Don't change
 name: telegram      # Must match the registered plugin in the profile
 
